@@ -28,7 +28,7 @@ public class PlayerAnimator implements Runnable {
         this.mMap = mMap;
     }
     //speed in millis seconds
-    private static final int ANIMATE_SPEED = 4000;
+    private static final int ANIMATE_SPEED = 800;
     private static final int ANIMATE_SPEED_TURN = 200;
     private static final int BEARING_OFFSET = 5;
     private static final float TILT = 90;

@@ -20,6 +20,7 @@ import com.ideochallenge.animations.MyAnimator;
 import com.ideochallenge.animations.PlayerAnimator;
 import com.ideochallenge.database.DBHelper;
 import com.ideochallenge.database.HistoryTrack;
+import com.ideochallenge.directionhelpers.FetchURL;
 import com.ideochallenge.directionhelpers.TaskLoadedCallback;
 import com.ideochallenge.model.Destination;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DBHelper dbHelper;
     private GoogleMap mMap;
     private Marker mMarker;
+    private Marker destinationMarker;
     private List<Destination> historyTrackList = new ArrayList<>();
     private Polyline currentPolyline;
     private List<LatLng> markerList = new ArrayList<>();
@@ -77,11 +79,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
 
+                new FetchURL(MainActivity.this)
+                        .execute(getUrl(mOrigin, mDest, "walking"), "walking");
                 /*new FetchURL(MainActivity.this)
                         .execute(getUrl(mOrigin, mDest, "walking"), "walking");*/
-
-                myAnimator = new MyAnimator(mMap, mMarker, markerList);
-                myAnimator.run();
                 //animatePlayerMarker();
             }
         });
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mOrigin = new LatLng(historyTrackList.get(0).getLat(), historyTrackList.get(0).getLng());
         mDest = new LatLng(historyTrackList.get(2).getLat(), historyTrackList.get(2).getLng());
         mMap = googleMap;
-
+        setMapLongClickListener(mMap);
 
         MarkerOptions markerOptions;
         markerOptions = new MarkerOptions();
@@ -110,6 +111,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
     }
+    private  void setMapLongClickListener(final GoogleMap map){
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                mOrigin = mMarker.getPosition();
+                mDest = latLng;
+
+                if(destinationMarker == null){
+                    MarkerOptions markerOptions;
+                    markerOptions = new MarkerOptions();
+                    markerOptions.position(mDest);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    destinationMarker = mMap.addMarker(markerOptions);
+                } else {
+                    destinationMarker.setPosition(mDest);
+                }
+
+                new FetchURL(MainActivity.this)
+                        .execute(getUrl(mOrigin, mDest, "walking"), "walking");
+            }
+        });
+    }
 
     private void animatePlayerMarker(){
         playerAnimator = new PlayerAnimator(mMap, mMarker, markerList);
@@ -119,6 +142,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onTaskDone(Object... values) {
         markerList = (ArrayList<LatLng>) values[0];
+        if (!markerList.isEmpty()){
+            playerAnimator = new PlayerAnimator(mMap, mMarker, markerList);
+            playerAnimator.run();
+        }
     }
 
     /*@Override
