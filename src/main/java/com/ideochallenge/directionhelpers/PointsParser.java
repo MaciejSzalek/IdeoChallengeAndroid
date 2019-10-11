@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -21,10 +22,12 @@ import java.util.List;
 public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
     private TaskLoadedCallback taskCallback;
     private String directionMode = "walking";
+    private Context context;
 
     public PointsParser(Context mContext, String directionMode) {
         this.taskCallback = (TaskLoadedCallback) mContext;
         this.directionMode = directionMode;
+        this.context = mContext;
     }
 
     // Parsing the data in non-ui thread
@@ -55,47 +58,52 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
     // Executes in UI thread, after the parsing process
     @Override
     protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-        ArrayList<LatLng> points = null;
-        PolylineOptions lineOptions = null;
-        // Traversing through all the routes
-        for (int i = 0; i < result.size(); i++) {
-            points = new ArrayList<>();
-            lineOptions = new PolylineOptions();
-            // Fetching i-th route
-            List<HashMap<String, String>> path = result.get(i);
-            // Fetching all the points in i-th route
-            for (int j = 0; j < path.size(); j++) {
-                HashMap<String, String> point = path.get(j);
-                double lat = Double.parseDouble(point.get("lat"));
-                double lng = Double.parseDouble(point.get("lng"));
-                LatLng position = new LatLng(lat, lng);
-                points.add(position);
+        try{
+            ArrayList<LatLng> points = null;
+            PolylineOptions lineOptions = null;
+            // Traversing through all the routes
+            for (int i = 0; i < result.size(); i++) {
+                points = new ArrayList<>();
+                lineOptions = new PolylineOptions();
+                // Fetching i-th route
+                List<HashMap<String, String>> path = result.get(i);
+                // Fetching all the points in i-th route
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+                    points.add(position);
+                }
+                // Adding all the points in the route to LineOptions
+                lineOptions.addAll(points);
+                if (directionMode.equalsIgnoreCase("driving")) {
+                    lineOptions.width(5);
+                    lineOptions.color(Color.MAGENTA);
+                } else {
+                    lineOptions.width(5);
+                    lineOptions.color(Color.LTGRAY);
+                }
+                Log.d("My LOG", "onPostExecute line options decoded");
             }
-            // Adding all the points in the route to LineOptions
-            lineOptions.addAll(points);
-            if (directionMode.equalsIgnoreCase("driving")) {
-                lineOptions.width(5);
-                lineOptions.color(Color.MAGENTA);
+
+            if (points != null) {
+                //mMap.addPolyline(lineOptions);
+                taskCallback.onTaskDone(points);
             } else {
-                lineOptions.width(5);
-                lineOptions.color(Color.LTGRAY);
+                Log.d("My LOG", "without Polylines drawn");
             }
-            Log.d("My LOG", "onPostExecute line options decoded");
-        }
 
-        if (points != null) {
-            //mMap.addPolyline(lineOptions);
-            taskCallback.onTaskDone(points);
-        } else {
-            Log.d("My LOG", "without Polylines drawn");
-        }
-
-        // Drawing polyline in the Google Map for the i-th route
+            // Drawing polyline in the Google Map for the i-th route
         /*if (lineOptions != null) {
             //mMap.addPolyline(lineOptions);
             taskCallback.onTaskDone(lineOptions);
         } else {
             Log.d("My LOG", "without Polylines drawn");
         }*/
+        } catch (NullPointerException e) {
+            Log.d("MY LOG", e.toString());
+            Toast.makeText(context, "Check your internet connection !!!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
