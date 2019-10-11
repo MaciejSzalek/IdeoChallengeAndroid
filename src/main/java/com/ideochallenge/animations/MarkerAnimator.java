@@ -62,8 +62,7 @@ public class MarkerAnimator {
     }
 
     public static void startAnimation(final Marker marker,
-                                      final LatLng startPosition,
-                                      final LatLng endPosition,
+                                      final List<LatLng> markerList,
                                       final LatLngInterpolator latLngInterpolator){
 
         final Handler handler = new Handler();
@@ -72,21 +71,27 @@ public class MarkerAnimator {
         final float durationInMs = 2000;
 
         handler.post(new Runnable() {
+            int index = 0;
             long elapsed;
             float t;
             float v;
-            //int index = -1;
             //int next;
 
             @Override
             public void run() {
+                LatLng startPosition, endPosition;
                 elapsed = SystemClock.uptimeMillis() - start;
                 t = elapsed / durationInMs;
                 v = interpolator.getInterpolation(t);
 
-                marker.setPosition(latLngInterpolator.interpolate(v, startPosition, endPosition));
                 if(t < 1.0){
                     handler.postDelayed(this, 16);
+                } else {
+                    if (index < markerList.size() - 2) {
+                        startPosition = markerList.get(index);
+                        endPosition = markerList.get(index + 1);
+                        marker.setPosition(latLngInterpolator.interpolate(v, startPosition, endPosition));
+                    }
                 }
             }
         });

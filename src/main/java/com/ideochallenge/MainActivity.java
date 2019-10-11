@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.ideochallenge.animations.LatLngInterpolator;
 import com.ideochallenge.animations.MarkerAnimator;
+import com.ideochallenge.animations.MyAnimator;
 import com.ideochallenge.database.DBHelper;
 import com.ideochallenge.database.HistoryTrack;
 import com.ideochallenge.directionhelpers.TaskLoadedCallback;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng mOrigin;
     private LatLng mDest;
 
+    private MyAnimator myAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +89,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 /*new FetchURL(MainActivity.this)
                         .execute(getUrl(mOrigin, mDest, "walking"), "walking");*/
 
-                MarkerAnimator.startAnimation(mMarker, mMarker.getPosition(), markerList.get(2),
-                        new LatLngInterpolator.Spherical());
+                //MarkerAnimator.startAnimation(mMarker, markerList,new LatLngInterpolator.Spherical());
+
+                myAnimator = new MyAnimator(mMarker, markerList);
+                myAnimator.run();
 
             }
         });
