@@ -1,23 +1,14 @@
 package com.ideochallenge;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.OnMapReadyCallback;;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -25,9 +16,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.ideochallenge.animations.LatLngInterpolator;
-import com.ideochallenge.animations.MarkerAnimator;
 import com.ideochallenge.animations.MyAnimator;
+import com.ideochallenge.animations.PlayerAnimator;
 import com.ideochallenge.database.DBHelper;
 import com.ideochallenge.database.HistoryTrack;
 import com.ideochallenge.directionhelpers.TaskLoadedCallback;
@@ -51,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng mDest;
 
     private MyAnimator myAnimator;
+    private PlayerAnimator playerAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +80,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 /*new FetchURL(MainActivity.this)
                         .execute(getUrl(mOrigin, mDest, "walking"), "walking");*/
 
-                //MarkerAnimator.startAnimation(mMarker, markerList,new LatLngInterpolator.Spherical());
-
-                myAnimator = new MyAnimator(mMarker, markerList);
+                myAnimator = new MyAnimator(mMap, mMarker, markerList);
                 myAnimator.run();
-
+                //animatePlayerMarker();
             }
         });
     }
@@ -120,6 +109,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             markerList.add(latLng);
         }
 
+    }
+
+    private void animatePlayerMarker(){
+        playerAnimator = new PlayerAnimator(mMap, mMarker, markerList);
+        playerAnimator.run();
     }
 
     @Override
@@ -159,5 +153,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
         return -1;
     }
-
 }

@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -17,28 +18,22 @@ import java.util.List;
 
 public class MyAnimator implements Runnable {
 
-    public MyAnimator(Marker marker, List<LatLng> markerList){
+    public MyAnimator(GoogleMap mMap, Marker marker, List<LatLng> markerList){
         this.trackingMarker = marker;
-        this.startPosition = startPosition;
-        this.endPosition = endPosition;
         this.markerList = markerList;
-
+        this.mMap = mMap;
     }
-
     //speed in millis seconds
     private static final int ANIMATE_SPEED = 1500;
-    private static final int ANIMATE_SPEED_TURN = 1000;
-    private static final int BEARING_OFFSET = 20;
-
-    private final Interpolator interpolator = new LinearInterpolator();
-    long start = SystemClock.uptimeMillis();
-
-    private Marker trackingMarker;
-    private LatLng startPosition,  endPosition;
-    private List<LatLng> markerList = new ArrayList<>();
-    int currentIndex = 0;
 
     private Handler mHandler = new Handler();
+    private final Interpolator interpolator = new LinearInterpolator();
+    private long start = SystemClock.uptimeMillis();
+    private GoogleMap mMap;
+
+    private Marker trackingMarker;
+    private List<LatLng> markerList = new ArrayList<>();
+    private int currentIndex = 0;
 
     @Override
     public void run() {
