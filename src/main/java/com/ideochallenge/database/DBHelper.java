@@ -4,8 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.ideochallenge.model.Destination;
+import com.ideochallenge.model.Route;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -13,7 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by Maciej Szałek on 2019-10-07.
+ * Created by Maciej Szalek on 2019-10-07.
  */
 
 public class DBHelper extends OrmLiteSqliteOpenHelper{
@@ -22,6 +24,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
     private static final int DB_VERSION = 1;
 
     private Dao<Destination, Integer> destinationDao = null;
+    private Dao<Route, Integer> routeDao = null;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -31,6 +34,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try{
             TableUtils.createTable(connectionSource, Destination.class);
+            TableUtils.createTable(connectionSource, Route.class);
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
@@ -41,6 +45,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
                           int oldVersion, int newVersion) {
         try{
             TableUtils.dropTable(connectionSource, Destination.class, true);
+            TableUtils.dropTable(connectionSource, Route.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e){
             throw new RuntimeException(e);
@@ -52,21 +57,63 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
         return destinationDao.create(destination);
     }
 
+    public int createNewRoute(Route route) throws SQLException {
+        getRouteDao();
+        return routeDao.create(route);
+    }
+
+    public List<Route> getAllRoute() throws SQLException {
+        getRouteDao();
+        return routeDao.queryForAll();
+    }
+
     public List<Destination> getAllDestination() throws SQLException {
         getDestinationDao();
         return destinationDao.queryForAll();
     }
 
-    public Dao<Destination, Integer> getDestinationDao() throws SQLException {
+    public void updateDestinationStatisticById(Integer id, long points, long visitors)
+            throws SQLException{
+        UpdateBuilder<Destination, Integer> updateBuilder = destinationDao.updateBuilder();
+        updateBuilder.where().eq("id", id);
+        updateBuilder.updateColumnValue("points", points);
+        updateBuilder.updateColumnValue("visitors" ,visitors);
+        updateBuilder.update();
+    }
+
+    public void updateDestinationById(Integer id) throws SQLException {
+        UpdateBuilder<Destination, Integer> updateBuilder = destinationDao.updateBuilder();
+        updateBuilder.where().eq("id", id);
+        updateBuilder.update();
+    }
+
+    public void updateRouteStatisticById(Integer id, long points, long visitors)
+            throws SQLException{
+        UpdateBuilder<Route, Integer> updateBuilder = routeDao.updateBuilder();
+        updateBuilder.where().eq("id", id);
+        updateBuilder.updateColumnValue("points", points);
+        updateBuilder.updateColumnValue("visitors" ,visitors);
+        updateBuilder.update();
+    }
+
+    private Dao<Destination, Integer> getDestinationDao() throws SQLException {
         if(destinationDao == null) {
             destinationDao = getDao(Destination.class);
         }
         return destinationDao;
     }
 
+    private Dao<Route, Integer> getRouteDao() throws SQLException {
+        if(routeDao == null) {
+            routeDao = getDao(Route.class);
+        }
+        return routeDao;
+    }
+
     @Override
     public void close() {
         destinationDao = null;
+        routeDao = null;
         super.close();
     }
 }

@@ -16,9 +16,9 @@ import java.util.List;
  * Created by Maciej Szalek on 2019-10-11.
  */
 
-public class MyAnimator implements Runnable {
+public class BotAnimator implements Runnable {
 
-    public MyAnimator(GoogleMap mMap, Marker marker, List<LatLng> markerList){
+    public BotAnimator(GoogleMap mMap, Marker marker, List<LatLng> markerList){
         this.trackingMarker = marker;
         this.markerList = markerList;
         this.mMap = mMap;

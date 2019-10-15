@@ -10,20 +10,25 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = Destination.TAB_DESTINATION)
 public class Destination {
 
-    public static final String TAB_DESTINATION = "tab_destination";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_LONGITUDE = "longitude";
-    public static final String COLUMN_LATITUDE = "latitude";
-    public static final String COLUMN_CATEGORY = "category";
+    static final String TAB_DESTINATION = "tab_destination";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_LONGITUDE = "longitude";
+    private static final String COLUMN_LATITUDE = "latitude";
+    private static final String COLUMN_CATEGORY = "category";
+    private static final String COLUMN_POINTS = "points";
+    private static final String COLUMN_VISITORS = "visitors";
 
     public Destination(){}
 
-    public Destination(String name, String category, double lat, double lng){
+    public Destination(String name, String category, double lat, double lng,
+                       long points, long visitors){
         this.name = name;
         this.category = category;
         this.lat = lat;
         this.lng = lng;
+        this.points = points;
+        this.visitors = visitors;
     }
 
     @DatabaseField(columnName = COLUMN_ID, generatedId = true)
@@ -40,6 +45,12 @@ public class Destination {
 
     @DatabaseField(columnName = COLUMN_LONGITUDE)
     private double lng;
+
+    @DatabaseField(columnName = COLUMN_POINTS)
+    private long points;
+
+    @DatabaseField(columnName = COLUMN_VISITORS)
+    private long visitors;
 
     public int getId() {
         return id;
@@ -80,6 +91,22 @@ public class Destination {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public long getPoints() {
+        return points;
+    }
+
+    public void setPoints(long points) {
+        this.points = points;
+    }
+
+    public long getVisitors() {
+        return visitors;
+    }
+
+    public void setVisitors(long visitors) {
+        this.visitors = visitors;
     }
 
 }

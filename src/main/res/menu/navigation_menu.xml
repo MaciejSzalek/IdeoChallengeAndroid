@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/new_game"
+            android:title="@string/new_game" />
+
+        <item
+            android:id="@+id/best_track"
+            android:title="Best Track" />
+        <item
+            android:id="@+id/best_place"
+            android:title="Best place" />
+
+        <item
+            android:id="@+id/finish"
+            android:title="Finish" />
+    </group>
+</menu>

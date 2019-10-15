@@ -1,6 +1,5 @@
 package com.ideochallenge.animations;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Handler;
 import android.os.SystemClock;

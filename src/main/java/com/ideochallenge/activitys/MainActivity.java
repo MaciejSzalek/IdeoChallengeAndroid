@@ -1,25 +1,32 @@
-package com.ideochallenge;
+package com.ideochallenge.activitys;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.ideochallenge.animations.MyAnimator;
+import com.ideochallenge.R;
+import com.ideochallenge.animations.BotAnimator;
 import com.ideochallenge.animations.PlayerAnimator;
 import com.ideochallenge.database.DBHelper;
-import com.ideochallenge.database.HistoryTrack;
+import com.ideochallenge.database.HistoryRoute;
 import com.ideochallenge.directionhelpers.FetchURL;
 import com.ideochallenge.directionhelpers.TaskLoadedCallback;
 import com.ideochallenge.model.Destination;
@@ -28,48 +35,64 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
-        , TaskLoadedCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
+        TaskLoadedCallback {
 
     private DBHelper dbHelper;
     private GoogleMap mMap;
     private Marker mMarker;
     private Marker destinationMarker;
-    private List<Destination> historyTrackList = new ArrayList<>();
     private Polyline currentPolyline;
+
+    private List<Destination> historyRouteList = new ArrayList<>();
     private List<LatLng> markerList = new ArrayList<>();
 
     private LatLng mOrigin;
     private LatLng mDest;
 
-    private MyAnimator myAnimator;
+    private BotAnimator botAnimator;
     private PlayerAnimator playerAnimator;
+
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        setNavigationDrawer();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
+
+        Toolbar toolbar = findViewById(R.id.map_toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.toolbarTxtColor));
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(Gravity.START);
+            }
+        });
 
         Button button = findViewById(R.id.test_btn);
         final TextView txtView = findViewById(R.id.test_txt);
 
         dbHelper = new DBHelper(this);
 
-
         try {
-            historyTrackList = dbHelper.getAllDestination();
+            historyRouteList = dbHelper.getAllDestination();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if(historyTrackList.isEmpty()){
+        if(historyRouteList.isEmpty()){
             try {
-                HistoryTrack.createHistoryTrack(this);
-                historyTrackList = dbHelper.getAllDestination();
+                HistoryRoute.createHistoryRoute(this);
+                historyRouteList = dbHelper.getAllDestination();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -91,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mOrigin = new LatLng(historyTrackList.get(0).getLat(), historyTrackList.get(0).getLng());
-        mDest = new LatLng(historyTrackList.get(2).getLat(), historyTrackList.get(2).getLng());
+        mOrigin = new LatLng(historyRouteList.get(0).getLat(), historyRouteList.get(0).getLng());
+        mDest = new LatLng(historyRouteList.get(2).getLat(), historyRouteList.get(2).getLng());
         mMap = googleMap;
         setMapLongClickListener(mMap);
 
@@ -102,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mMarker = mMap.addMarker(markerOptions);
 
-        for(Destination destination: historyTrackList){
+        for(Destination destination: historyRouteList){
             LatLng latLng = new LatLng(destination.getLat(), destination.getLng());
             //markerOptions = new MarkerOptions();
             //markerOptions.position(latLng);
@@ -111,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
     }
+
+
     private  void setMapLongClickListener(final GoogleMap map){
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -134,9 +159,72 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void animatePlayerMarker(){
-        playerAnimator = new PlayerAnimator(mMap, mMarker, markerList);
-        playerAnimator.run();
+    public void setNavigationDrawer() {
+        NavigationView navigationView = findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.new_game) {
+                    drawerLayout.closeDrawers();
+
+                } else if (itemId == R.id.best_track) {
+
+
+                } else if (itemId == R.id.best_place) {
+
+
+                } else if (itemId == R.id.finish) {
+
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.map_type_normal:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                return true;
+            case R.id.map_type_satellite:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                return true;
+            case R.id.map_type_hybrid:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                return true;
+            case R.id.map_type_terrain:
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                return true;
+
+            case R.id.line_distance:
+
+                return true;
+            case R.id.delete_line_distance:
+
+                return true;
+
+            case R.id.simulation:
+
+                return true;
+
+            case R.id.editor:
+
+                return true;
+            case R.id.delete_all:
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -155,6 +243,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }*/
 
+    private void animatePlayerMarker(){
+        playerAnimator = new PlayerAnimator(mMap, mMarker, markerList);
+        playerAnimator.run();
+    }
+
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
@@ -166,18 +259,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 + "?" + parameters + "&key=" + getString(R.string.API_KEY);
     }
 
-    private float getBearing(LatLng begin, LatLng end) {
-        double lat = Math.abs(begin.latitude - end.latitude);
-        double lng = Math.abs(begin.longitude - end.longitude);
-
-        if (begin.latitude < end.latitude && begin.longitude < end.longitude)
-            return (float) (Math.toDegrees(Math.atan(lng / lat)));
-        else if (begin.latitude >= end.latitude && begin.longitude < end.longitude)
-            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 90);
-        else if (begin.latitude >= end.latitude && begin.longitude >= end.longitude)
-            return (float) (Math.toDegrees(Math.atan(lng / lat)) + 180);
-        else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
-            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
-        return -1;
-    }
 }
