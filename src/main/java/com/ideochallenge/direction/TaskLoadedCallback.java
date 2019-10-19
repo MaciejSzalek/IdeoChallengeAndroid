@@ -1,4 +1,4 @@
-package com.ideochallenge.directionhelpers;
+package com.ideochallenge.direction;
 
 /**
  * Created by Maciej Szalek on 2019-10-09.

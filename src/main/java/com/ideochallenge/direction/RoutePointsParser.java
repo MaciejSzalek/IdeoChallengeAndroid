@@ -1,4 +1,4 @@
-package com.ideochallenge.directionhelpers;
+package com.ideochallenge.direction;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -19,12 +19,12 @@ import java.util.List;
  * Created by Maciej Szalek on 2019-10-09.
  */
 
-public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+public class RoutePointsParser extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
     private TaskLoadedCallback taskCallback;
     private String directionMode = "walking";
     private Context context;
 
-    public PointsParser(Context mContext, String directionMode) {
+    public RoutePointsParser(Context mContext, String directionMode) {
         this.taskCallback = (TaskLoadedCallback) mContext;
         this.directionMode = directionMode;
         this.context = mContext;
@@ -40,7 +40,7 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
         try {
             jObject = new JSONObject(jsonData[0]);
             Log.d("my log", jsonData[0]);
-            DataParser parser = new DataParser();
+            RouteDataParser parser = new RouteDataParser();
             Log.d("my log", parser.toString());
 
             // Starts parsing data
@@ -94,13 +94,6 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
                 Log.d("My LOG", "without Polylines drawn");
             }
 
-            // Drawing polyline in the Google Map for the i-th route
-        /*if (lineOptions != null) {
-            //mMap.addPolyline(lineOptions);
-            taskCallback.onTaskDone(lineOptions);
-        } else {
-            Log.d("My LOG", "without Polylines drawn");
-        }*/
         } catch (NullPointerException e) {
             Log.d("MY LOG", e.toString());
             Toast.makeText(context, "Check your internet connection !!!", Toast.LENGTH_SHORT).show();

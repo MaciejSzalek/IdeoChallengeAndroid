@@ -3,8 +3,9 @@ package com.ideochallenge.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ideochallenge.model.Destination;
-import com.ideochallenge.model.Route;
+import com.ideochallenge.models.Destination;
+import com.ideochallenge.models.NearbyPlace;
+import com.ideochallenge.models.Route;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.UpdateBuilder;
@@ -25,6 +26,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
 
     private Dao<Destination, Integer> destinationDao = null;
     private Dao<Route, Integer> routeDao = null;
+    private Dao<NearbyPlace, Integer> nearbyPlaceDao = null;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -35,6 +37,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
         try{
             TableUtils.createTable(connectionSource, Destination.class);
             TableUtils.createTable(connectionSource, Route.class);
+            TableUtils.createTable(connectionSource, NearbyPlace.class);
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
@@ -46,6 +49,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
         try{
             TableUtils.dropTable(connectionSource, Destination.class, true);
             TableUtils.dropTable(connectionSource, Route.class, true);
+            TableUtils.dropTable(connectionSource, NearbyPlace.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e){
             throw new RuntimeException(e);
@@ -62,6 +66,11 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
         return routeDao.create(route);
     }
 
+    public int createNewNearbyPlace(NearbyPlace nearbyPlace) throws SQLException {
+        getNearbyPlaceDao();
+        return nearbyPlaceDao.create(nearbyPlace);
+    }
+
     public List<Route> getAllRoute() throws SQLException {
         getRouteDao();
         return routeDao.queryForAll();
@@ -70,6 +79,11 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
     public List<Destination> getAllDestination() throws SQLException {
         getDestinationDao();
         return destinationDao.queryForAll();
+    }
+
+    public List<NearbyPlace> getAllNearbyPlace() throws SQLException {
+        getNearbyPlaceDao();
+        return nearbyPlaceDao.queryForAll();
     }
 
     public void updateDestinationStatisticById(Integer id, long points, long visitors)
@@ -110,10 +124,18 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
         return routeDao;
     }
 
+    private Dao<NearbyPlace, Integer> getNearbyPlaceDao() throws SQLException {
+        if(nearbyPlaceDao == null){
+            nearbyPlaceDao = getDao(NearbyPlace.class);
+        }
+        return nearbyPlaceDao;
+    }
+
     @Override
     public void close() {
         destinationDao = null;
         routeDao = null;
+        nearbyPlaceDao = null;
         super.close();
     }
 }

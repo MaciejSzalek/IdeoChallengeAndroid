@@ -1,4 +1,4 @@
-package com.ideochallenge.directionhelpers;
+package com.ideochallenge.direction;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -15,11 +15,11 @@ import java.net.URL;
  * Created by Maciej Szalek on 2019-10-09.
  */
 
-public class FetchURL extends AsyncTask<String, Void, String> {
+public class DownloadURL extends AsyncTask<String, Void, String> {
     private Context mContext;
     private String directionMode = "walking";
 
-    public FetchURL(Context mContext) {
+    public DownloadURL(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -41,7 +41,7 @@ public class FetchURL extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        PointsParser parserTask = new PointsParser(mContext, directionMode);
+        RoutePointsParser parserTask = new RoutePointsParser(mContext, directionMode);
         parserTask.execute(s);
     }
 

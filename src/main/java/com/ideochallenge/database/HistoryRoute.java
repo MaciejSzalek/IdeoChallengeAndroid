@@ -2,7 +2,7 @@ package com.ideochallenge.database;
 
 import android.content.Context;
 
-import com.ideochallenge.model.Destination;
+import com.ideochallenge.models.Destination;
 
 import java.sql.SQLException;
 

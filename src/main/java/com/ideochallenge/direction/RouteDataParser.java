@@ -1,4 +1,4 @@
-package com.ideochallenge.directionhelpers;
+package com.ideochallenge.direction;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Maciej Szalek on 2019-10-09.
  */
 
-public class DataParser {
+public class RouteDataParser {
 
     public List<List<HashMap<String, String>>> parse(JSONObject jObject) {
 
