@@ -1,4 +1,4 @@
-package com.ideochallenge.activitys;
+package com.ideochallenge.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -7,7 +7,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,13 +32,12 @@ import com.ideochallenge.direction.DownloadURL;
 import com.ideochallenge.direction.TaskLoadedCallback;
 import com.ideochallenge.models.Destination;
 import com.ideochallenge.models.NearbyPlace;
-import com.ideochallenge.nearby.NearbyDataGetter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback,
         TaskLoadedCallback {
 
     private DBHelper dbHelper;
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*new DownloadURL(MainActivity.this)
+                /*new DownloadURL(MapActivity.this)
                         .execute(getRouteUrl(mOrigin, mDest, "walking"), "walking");*/
                 startBot();
                 //showNearbyPlaces();
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } else {
                     destinationMarker.setPosition(mDest);
                 }
-                new DownloadURL(MainActivity.this)
+                new DownloadURL(MapActivity.this)
                         .execute(getRouteUrl(mOrigin, mDest, "walking"), "walking");
             }
         });
@@ -240,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (!markerList.isEmpty()){
             playerAnimator = new PlayerAnimator(mMap, mMarker, markerList, nearbyDatabaseList);
             playerAnimator.run();
+            destinationMarker.remove();
         }
     }
 
@@ -292,31 +291,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             mMap.addMarker(markerOptions);
         }
-    }
-
-    private void showNearbyPlaces(){
-        List<String> typeList = new ArrayList<>();
-        typeList.add("bank");
-        typeList.add("atm");
-        typeList.add("church");
-        String Restaurant = "restaurant";
-        String url = getNearbyUrl(mOrigin.latitude, mOrigin.longitude, Restaurant);
-        Object[] DataTransfer = new Object[1];
-        DataTransfer[0] = url;
-        NearbyDataGetter getNearbyPlacesData = new NearbyDataGetter(this);
-        getNearbyPlacesData.execute(DataTransfer);
-    }
-
-    private String getNearbyUrl(double latitude, double longitude, String nearbyPlace) {
-        int PROXIMITY_RADIUS = 5000;
-        StringBuilder googlePlacesUrl =
-                new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlacesUrl.append("location=" + latitude + "," + longitude);
-        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
-        googlePlacesUrl.append("&type=" + nearbyPlace);
-        googlePlacesUrl.append("&sensor=true");
-        googlePlacesUrl.append("&key=" + getString(R.string.API_KEY));
-        Log.d("getUrl", googlePlacesUrl.toString());
-        return (googlePlacesUrl.toString());
     }
 }

@@ -11,7 +11,6 @@ import java.sql.SQLException;
  */
 public class HistoryRoute {
 
-
     public static void createHistoryRoute(Context context) throws SQLException {
 
         DBHelper dbHelper = new DBHelper(context);

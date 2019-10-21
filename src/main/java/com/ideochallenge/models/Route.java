@@ -18,6 +18,12 @@ public class Route {
 
     public Route(){}
 
+    public Route(String category, long points, long visitors){
+        this.category = category;
+        this.points = points;
+        this.visitors = visitors;
+    }
+
     @DatabaseField(columnName = COLUMN_ID, generatedId = true)
     private int id;
 

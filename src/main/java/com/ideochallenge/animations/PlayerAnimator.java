@@ -81,7 +81,7 @@ public class PlayerAnimator implements Runnable {
             nearbyLocation.setLatitude(nearbyPlaces.get(i).getNearbyLat());
             nearbyLocation.setLongitude(nearbyPlaces.get(i).getNearbyLng());
             distance = trackingLocation.distanceTo(nearbyLocation);
-            if(distance < 20) {
+            if(distance < 30) {
                 trackingMarker.setTitle(nearbyPlaces.get(i).getNearbyName());
                 trackingMarker.showInfoWindow();
                 break;

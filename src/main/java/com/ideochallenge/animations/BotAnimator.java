@@ -22,7 +22,9 @@ import java.util.List;
 
 public class BotAnimator implements Runnable {
 
-    public BotAnimator(Marker marker, List<LatLng> markerList, List<NearbyPlace> nearbyPlaces){
+    public BotAnimator(Marker marker,
+                       List<LatLng> markerList,
+                       List<NearbyPlace> nearbyPlaces){
         this.trackingMarker = marker;
         this.markerList = markerList;
         this.nearbyPlaces = nearbyPlaces;
@@ -57,18 +59,17 @@ public class BotAnimator implements Runnable {
         trackingLocation.setLatitude(newPosition.latitude);
         trackingLocation.setLongitude(newPosition.longitude);
 
-        for(NearbyPlace nearbyPlace: nearbyPlaces){
-            nearbyLocation.setLatitude(nearbyPlace.getNearbyLat());
-            nearbyLocation.setLongitude(nearbyPlace.getNearbyLng());
+        for(int i=0; i<nearbyPlaces.size(); i++){
+            nearbyLocation.setLatitude(nearbyPlaces.get(i).getNearbyLat());
+            nearbyLocation.setLongitude(nearbyPlaces.get(i).getNearbyLng());
             distance = trackingLocation.distanceTo(nearbyLocation);
-            //trackingMarker.setTitle(nearbyPlaces.get(0).getNearbyName());
-        }
-
-        if(distance < 2000){
-            trackingMarker.setTitle(nearbyPlaces.get(0).getNearbyName());
-            trackingMarker.showInfoWindow();
-        }else{
-            trackingMarker.hideInfoWindow();
+            if(distance < 50) {
+                trackingMarker.setTitle(nearbyPlaces.get(i).getNearbyName());
+                trackingMarker.showInfoWindow();
+                break;
+            }else{
+                trackingMarker.hideInfoWindow();
+            }
         }
 
         if(t < 1.0){
@@ -85,7 +86,6 @@ public class BotAnimator implements Runnable {
             }
         }
     }
-
 
     private LatLng getEndLatLng() {
         return markerList.get(currentIndex + 1);
