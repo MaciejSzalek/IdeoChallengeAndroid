@@ -16,7 +16,7 @@ public class RouteCreator {
 
         DBHelper dbHelper = new DBHelper(context);
 
-        Route route1 = new Route("History", 10, 2);
+        Route route1 = new Route("history", 10, 2);
 
         dbHelper.createNewRoute(route1);
     }

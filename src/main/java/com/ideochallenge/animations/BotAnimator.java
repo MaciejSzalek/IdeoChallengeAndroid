@@ -10,6 +10,7 @@ import android.view.animation.LinearInterpolator;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.ideochallenge.bot.BotCounter;
 import com.ideochallenge.database.DBHelper;
 import com.ideochallenge.models.NearbyPlace;
 
@@ -22,27 +23,20 @@ import java.util.List;
 
 public class BotAnimator implements Runnable {
 
-    public BotAnimator(Marker marker,
-                       List<LatLng> markerList,
-                       List<NearbyPlace> nearbyPlaces){
+    public BotAnimator(Marker marker, List<LatLng> destinationLatLngList){
         this.trackingMarker = marker;
-        this.markerList = markerList;
-        this.nearbyPlaces = nearbyPlaces;
+        this.destinationLatLngList = destinationLatLngList;
     }
 
     private Marker trackingMarker;
-    private Location trackingLocation = new Location("marker_location");
-    private Location nearbyLocation = new Location("nearby_location");
     private Handler mHandler = new Handler();
     private final Interpolator interpolator = new LinearInterpolator();
 
-    private List<LatLng> markerList = new ArrayList<>();
-    private List<NearbyPlace> nearbyPlaces = new ArrayList<>();
+    private List<LatLng> destinationLatLngList = new ArrayList<>();
 
     private static final int ANIMATE_SPEED = 3000;
     private long start = SystemClock.uptimeMillis();
     private int currentIndex = 0;
-    private float distance;
 
     @Override
     public void run() {
@@ -54,28 +48,12 @@ public class BotAnimator implements Runnable {
         double lat = t * endLatLng.latitude + (1-t) * beginLatLng.latitude;
         double lng = t * endLatLng.longitude + (1-t) * beginLatLng.longitude;
         LatLng newPosition = new LatLng(lat, lng);
-
         trackingMarker.setPosition(newPosition);
-        trackingLocation.setLatitude(newPosition.latitude);
-        trackingLocation.setLongitude(newPosition.longitude);
-
-        for(int i=0; i<nearbyPlaces.size(); i++){
-            nearbyLocation.setLatitude(nearbyPlaces.get(i).getNearbyLat());
-            nearbyLocation.setLongitude(nearbyPlaces.get(i).getNearbyLng());
-            distance = trackingLocation.distanceTo(nearbyLocation);
-            if(distance < 50) {
-                trackingMarker.setTitle(nearbyPlaces.get(i).getNearbyName());
-                trackingMarker.showInfoWindow();
-                break;
-            }else{
-                trackingMarker.hideInfoWindow();
-            }
-        }
 
         if(t < 1.0){
             mHandler.postDelayed(this, 16);
         } else {
-            if(currentIndex < markerList.size()-2){
+            if(currentIndex < destinationLatLngList.size()-2){
                 currentIndex++;
                 start = SystemClock.uptimeMillis();
                 mHandler.postDelayed(this, 16);
@@ -83,15 +61,16 @@ public class BotAnimator implements Runnable {
             } else {
                 currentIndex++;
                 trackingMarker.remove();
+                BotCounter.subtractBot();
             }
         }
     }
 
     private LatLng getEndLatLng() {
-        return markerList.get(currentIndex + 1);
+        return destinationLatLngList.get(currentIndex + 1);
     }
 
     private LatLng getBeginLatLng() {
-        return markerList.get(currentIndex);
+        return destinationLatLngList.get(currentIndex);
     }
 }

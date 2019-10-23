@@ -47,9 +47,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
-                map:cameraTargetLat="50.0411"
-                map:cameraTargetLng="21.9991"
-                map:cameraZoom="13" />
+                map:cameraTargetLat="50.037427"
+                map:cameraTargetLng="22.004873"
+                map:cameraZoom="14" />
         </FrameLayout>
 
     </LinearLayout>

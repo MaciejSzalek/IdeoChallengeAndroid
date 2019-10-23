@@ -15,10 +15,10 @@ public class HistoryRoute {
 
         DBHelper dbHelper = new DBHelper(context);
 
-        Destination des1 = new Destination("Zamek Lubomirskich", "History", 50.032397, 22.000574, 10, 2);
-        Destination des2 = new Destination("Pałac Lubomirskich", "History", 50.033706, 22.002530, 10, 3);
-        Destination des3 = new Destination("Pomnik S.Konarskiego", "History", 50.035207, 22.001033, 10, 3);
-        Destination des4 = new Destination("Ratusz", "History", 50.037478, 22.004133, 10, 3);
+        Destination des1 = new Destination("Zamek Lubomirskich", "history", 50.032397, 22.000574, 10, 2);
+        Destination des2 = new Destination("Pałac Lubomirskich", "history", 50.033706, 22.002530, 10, 3);
+        Destination des3 = new Destination("Pomnik S.Konarskiego", "history", 50.035207, 22.001033, 10, 3);
+        Destination des4 = new Destination("Ratusz", "history", 50.037478, 22.004133, 10, 3);
 
         dbHelper.createNewDestination(des1);
         dbHelper.createNewDestination(des2);

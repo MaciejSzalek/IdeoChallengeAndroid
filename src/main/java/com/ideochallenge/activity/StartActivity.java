@@ -85,7 +85,7 @@ public class StartActivity extends AppCompatActivity {
                     goToMapActivity();
                     finish();
                 }
-            }, 2000);
+            }, 5000);
         }
     }
 

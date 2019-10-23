@@ -46,29 +46,29 @@
 
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/editor"
+                android:id="@+id/polyline_show"
                 android:orderInCategory="100"
-                android:title="Challenge edytor"/>
+                android:title="Show polyline"/>
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/simulation"
+                android:id="@+id/polyline_hide"
                 android:orderInCategory="200"
-                android:title="Symulacja GRY"/>
+                android:title="Hide polyline"/>
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/line_distance"
+                android:id="@+id/one"
                 android:orderInCategory="300"
-                android:title="Wyznacz trasę/dystans"/>
+                android:title="1"/>
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/delete_line_distance"
+                android:id="@+id/two"
                 android:orderInCategory="400"
-                android:title="Usuń trasę/dystans" />
+                android:title="2" />
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/delete_all"
+                android:id="@+id/three"
                 android:orderInCategory="500"
-                android:title="Usuń markery"/>
+                android:title="3"/>
         </menu>
     </item>
 </menu>

@@ -86,28 +86,20 @@ public class DBHelper extends OrmLiteSqliteOpenHelper{
         return nearbyPlaceDao.queryForAll();
     }
 
-    public void updateDestinationStatisticById(Integer id, long points, long visitors)
-            throws SQLException{
-        UpdateBuilder<Destination, Integer> updateBuilder = destinationDao.updateBuilder();
-        updateBuilder.where().eq("id", id);
-        updateBuilder.updateColumnValue("points", points);
-        updateBuilder.updateColumnValue("visitors" ,visitors);
-        updateBuilder.update();
+    public List<Destination> getAllDestinationFromCategory(String category) throws SQLException {
+        getDestinationDao();
+        return destinationDao.queryForEq("category", category);
     }
 
-    public void updateDestinationById(Integer id) throws SQLException {
-        UpdateBuilder<Destination, Integer> updateBuilder = destinationDao.updateBuilder();
-        updateBuilder.where().eq("id", id);
-        updateBuilder.update();
+    public Dao.CreateOrUpdateStatus createOrUpdateRoute(Route route) throws SQLException{
+        getRouteDao();
+        return routeDao.createOrUpdate(route);
     }
 
-    public void updateRouteStatisticById(Integer id, long points, long visitors)
-            throws SQLException{
-        UpdateBuilder<Route, Integer> updateBuilder = routeDao.updateBuilder();
-        updateBuilder.where().eq("id", id);
-        updateBuilder.updateColumnValue("points", points);
-        updateBuilder.updateColumnValue("visitors" ,visitors);
-        updateBuilder.update();
+    public Dao.CreateOrUpdateStatus createOrUpdateDestination(Destination destination)
+            throws SQLException {
+        getDestinationDao();
+        return destinationDao.createOrUpdate(destination);
     }
 
     private Dao<Destination, Integer> getDestinationDao() throws SQLException {

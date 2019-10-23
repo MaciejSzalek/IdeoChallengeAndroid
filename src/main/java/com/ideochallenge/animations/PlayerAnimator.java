@@ -25,7 +25,8 @@ import java.util.List;
 
 public class PlayerAnimator implements Runnable {
 
-    public PlayerAnimator(GoogleMap mMap, Marker marker,
+    public PlayerAnimator(GoogleMap mMap,
+                          Marker marker,
                           List<LatLng> markerList,
                           List<NearbyPlace> nearbyPlaces){
         this.mMap = mMap;
@@ -50,11 +51,12 @@ public class PlayerAnimator implements Runnable {
     private Location nearbyLocation = new Location("nearby_location");
     private List<LatLng> markerList = new ArrayList<>();
     private List<NearbyPlace> nearbyPlaces = new ArrayList<>();
+    private static List<LatLng> points = new ArrayList<>();
 
     private long start = SystemClock.uptimeMillis();
     private int currentIndex = 0;
     private float distance;
-    private boolean showPolyline = false;
+    private boolean showPolyline = true;
 
 
     @Override
@@ -98,7 +100,6 @@ public class PlayerAnimator implements Runnable {
                 LatLng begin = getBeginLatLng();
                 LatLng end = getEndLatLng();
                 setCameraPositionMovement(begin, end);
-
                 start = SystemClock.uptimeMillis();
                 mHandler.postDelayed(this, 16);
 
@@ -143,16 +144,26 @@ public class PlayerAnimator implements Runnable {
         );
     }
 
+    public void showPolyline(Boolean show){
+        if(show){
+            polyline.setVisible(true);
+        } else {
+            polyline.setVisible(false);
+        }
+    }
+
+
     private Polyline initializePolyline(){
         polylineOptions = new PolylineOptions();
         polylineOptions.color(Color.BLUE);
         polylineOptions.width(3);
-        polylineOptions.add(new LatLng(markerList.get(0).latitude, markerList.get(0).longitude));
-        return mMap.addPolyline(polylineOptions);
+        polylineOptions.add(new LatLng(markerList.get(0).latitude,
+                markerList.get(0).longitude));
+        polyline = mMap.addPolyline(polylineOptions);
+        return polyline;
     }
 
     private void updatePolyline(LatLng latLng){
-        List<LatLng> points = polyline.getPoints();
         points.add(latLng);
         polyline.setPoints(points);
     }
