@@ -1,6 +1,8 @@
 package com.ideochallenge.activity;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -24,26 +26,35 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ideochallenge.R;
 import com.ideochallenge.animations.PlayerAnimator;
-import com.ideochallenge.bot.BotCounter;
-import com.ideochallenge.bot.BotCreator;
+import com.ideochallenge.bot.Events;
 import com.ideochallenge.bot.BotManager;
+import com.ideochallenge.bot.Timer;
 import com.ideochallenge.database.DBHelper;
 import com.ideochallenge.direction.DownloadURL;
 import com.ideochallenge.direction.TaskLoadedCallback;
 import com.ideochallenge.models.Destination;
 import com.ideochallenge.models.NearbyPlace;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback,
         TaskLoadedCallback {
 
-    private DBHelper dbHelper;
     private GoogleMap mMap;
+    private EventBus eventBus = EventBus.getDefault();
+    private DBHelper dbHelper;
+    private Timer timer;
+    private PlayerAnimator playerAnimator;
+    private BotManager botManager;
+    private DrawerLayout drawerLayout;
+
     private Marker playerMarker;
-    private Marker botMarker;
     private Marker destinationMarker;
 
     private List<Destination> destinationList = new ArrayList<>();
@@ -53,11 +64,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LatLng mOrigin;
     private LatLng mDest;
 
-    private PlayerAnimator playerAnimator;
-    private DrawerLayout drawerLayout;
+    private TextView txtView;
 
-    private BotCreator botCreator;
-    private BotManager botManager;
+    private Integer timerHours = 0;
+    private Integer timerMinutes = 0;
+    private Integer botCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +94,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         Button button = findViewById(R.id.test_btn);
-        final TextView txtView = findViewById(R.id.test_txt);
+        txtView = findViewById(R.id.test_txt);
 
         dbHelper = new DBHelper(this);
+        eventBus.register(this);
+        timer = new Timer();
+        timer.startTimer();
 
         if(destinationList.isEmpty()){
             try {
@@ -94,7 +108,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
         }
-
         if (savedInstanceState != null) {
             double lat = savedInstanceState.getDouble("mMarkerLat");
             double lng = savedInstanceState.getDouble("mMarkerLng");
@@ -107,12 +120,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 botManager = new BotManager(MapActivity.this, mMap);
-                botManager.run();
-                txtView.setText("Bots = " + BotCounter.getBotCount());
-                //botCreator = new BotCreator(MapActivity.this, mMap);
-                //botCreator.createNewBot();
+                botManager.manageBot(0, timerHours);
+                //startTimer();
             }
         });
+    }
+
+    @Subscribe
+    public void getBotEvent(Events.BotEvent botEvent){
+        botCount = botEvent.getCount();
+        botManager = new BotManager(this, mMap);
+        botManager.manageBot(botCount, timerHours);
+        //txtView.setText("Bots = " + botEvent.getCount());
+    }
+
+    @Subscribe
+    public void getTimerEvent(Events.TimerEvent timerEvent){
+        timerHours = timerEvent.getHours();
+        timerMinutes = timerEvent.getMinutes();
+        DecimalFormat decimalFormat = new DecimalFormat("#00");
+        String hours =  String.valueOf(decimalFormat.format(timerHours));
+        String minutes =  String.valueOf(decimalFormat.format(timerMinutes));
+        txtView.setText("CLOCK: " + hours + " : " + minutes + "  bot count: " + botCount);
+
+        botManager = new BotManager(this, mMap);
+        botManager.manageBot(botCount, timerHours);
     }
 
     @Override
@@ -207,15 +239,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             case R.id.polyline_hide:
                 playerAnimator.showPolyline(false);
                 return true;
-
-            case R.id.one:
-
+            case R.id.time_one:
+                eventBus.post(new Events.TimerScale(1));
                 return true;
-
-            case R.id.two:
-
+            case R.id.time_four:
+                eventBus.post(new Events.TimerScale(4));
                 return true;
-            case R.id.three:
+            case R.id.time_eight:
+                eventBus.post(new Events.TimerScale(8));
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

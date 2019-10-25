@@ -43,7 +43,6 @@
         android:icon="@drawable/icon_tool">
 
         <menu>
-
             <item
                 app:showAsAction="ifRoom"
                 android:id="@+id/polyline_show"
@@ -56,19 +55,19 @@
                 android:title="Hide polyline"/>
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/one"
+                android:id="@+id/time_one"
                 android:orderInCategory="300"
-                android:title="1"/>
+                android:title="time x 1"/>
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/two"
+                android:id="@+id/time_four"
                 android:orderInCategory="400"
-                android:title="2" />
+                android:title="time x 4" />
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/three"
+                android:id="@+id/time_eight"
                 android:orderInCategory="500"
-                android:title="3"/>
+                android:title="time x 8"/>
         </menu>
     </item>
 </menu>

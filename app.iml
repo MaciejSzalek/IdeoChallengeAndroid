@@ -128,6 +128,7 @@
     <orderEntry type="library" exported="" name="play-services-tasks-license-11.8.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javax.inject-1" level="project" />
     <orderEntry type="library" exported="" name="design-27.1.1" level="project" />
+    <orderEntry type="library" exported="" name="eventbus-3.0.0" level="project" />
     <orderEntry type="library" exported="" name="livedata-core-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="runtime-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="1_runtime-1.1.0" level="project" />

@@ -34,7 +34,7 @@ public class BotAnimator implements Runnable {
 
     private List<LatLng> destinationLatLngList = new ArrayList<>();
 
-    private static final int ANIMATE_SPEED = 3000;
+    private static final int ANIMATE_SPEED = 5000;
     private long start = SystemClock.uptimeMillis();
     private int currentIndex = 0;
 

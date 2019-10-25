@@ -1,47 +1,55 @@
 package com.ideochallenge.bot;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Marker;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by Maciej Szalek on 2019-10-23.
  */
 
-public class BotManager implements Runnable {
+public class BotManager {
 
     private BotCreator botCreator;
     private Context context;
     private GoogleMap map;
-
-    int i = 1;
 
     public BotManager(Context context, GoogleMap map){
         this.context = context;
         this.map = map;
     }
 
-    @Override
-    public void run() {
-        test();
+    public void manage(Integer botCount){
+        if(botCount < 2){
+            BotCounter.addBot();
+            botCreator = new BotCreator(context, map);
+            botCreator.createNewBot();
+        }
     }
 
-    private void manageBot() {
-        botCreator = new BotCreator(context, map);
-        botCreator.createNewBot();
-    }
+    public void manageBot(Integer botCount, Integer hours) {
 
-    private void test(){
-        while(i == 1){
-            Log.d("BOT OUTER LOOP", "in progress");
-            if (BotCounter.getBotCount() < 5){
+        if(hours > 9 && hours < 16){
+            if(botCount < 5){
                 BotCounter.addBot();
                 botCreator = new BotCreator(context, map);
                 botCreator.createNewBot();
-                Log.d("BOT CREATOR: ", "loop in progress");
+            }
+        } else if(hours > 15 && hours < 22) {
+            if(botCount < 8){
+                BotCounter.addBot();
+                botCreator = new BotCreator(context, map);
+                botCreator.createNewBot();
+            }
+        } else {
+            if(botCount < 3){
+                BotCounter.addBot();
+                botCreator = new BotCreator(context, map);
+                botCreator.createNewBot();
             }
         }
     }
