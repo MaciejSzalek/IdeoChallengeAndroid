@@ -45,29 +45,19 @@
         <menu>
             <item
                 app:showAsAction="ifRoom"
-                android:id="@+id/polyline_show"
-                android:orderInCategory="100"
-                android:title="Show polyline"/>
-            <item
-                app:showAsAction="ifRoom"
-                android:id="@+id/polyline_hide"
-                android:orderInCategory="200"
-                android:title="Hide polyline"/>
-            <item
-                app:showAsAction="ifRoom"
                 android:id="@+id/time_one"
                 android:orderInCategory="300"
-                android:title="time x 1"/>
+                android:title="@string/time_x_1"/>
             <item
                 app:showAsAction="ifRoom"
                 android:id="@+id/time_four"
                 android:orderInCategory="400"
-                android:title="time x 4" />
+                android:title="@string/time_x_4" />
             <item
                 app:showAsAction="ifRoom"
                 android:id="@+id/time_eight"
                 android:orderInCategory="500"
-                android:title="time x 8"/>
+                android:title="@string/time_x_8"/>
         </menu>
     </item>
 </menu>

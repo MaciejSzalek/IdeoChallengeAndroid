@@ -12,16 +12,16 @@ public class Destination {
 
     static final String TAB_DESTINATION = "tab_destination";
     private static final String COLUMN_ID = "id";
+    private static final String COLUMN_CATEGORY = "category";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_LONGITUDE = "longitude";
     private static final String COLUMN_LATITUDE = "latitude";
-    private static final String COLUMN_CATEGORY = "category";
     private static final String COLUMN_POINTS = "points";
     private static final String COLUMN_VISITORS = "visitors";
 
     public Destination(){}
 
-    public Destination(String name, String category, double lat, double lng,
+    public Destination(String category, String name, double lat, double lng,
                        long points, long visitors){
         this.name = name;
         this.category = category;
@@ -34,11 +34,11 @@ public class Destination {
     @DatabaseField(columnName = COLUMN_ID, generatedId = true)
     private int id;
 
-    @DatabaseField(columnName = COLUMN_NAME)
-    private String name;
-
     @DatabaseField(columnName = COLUMN_CATEGORY)
     private String category;
+
+    @DatabaseField(columnName = COLUMN_NAME)
+    private String name;
 
     @DatabaseField(columnName = COLUMN_LATITUDE)
     private double lat;
@@ -60,21 +60,20 @@ public class Destination {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
     public String getCategory() {
         return category;
     }
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public double getLat() {

@@ -23,13 +23,6 @@ public class BotManager {
         this.map = map;
     }
 
-    public void manage(Integer botCount){
-        if(botCount < 2){
-            BotCounter.addBot();
-            botCreator = new BotCreator(context, map);
-            botCreator.createNewBot();
-        }
-    }
 
     public void manageBot(Integer botCount, Integer hours) {
 

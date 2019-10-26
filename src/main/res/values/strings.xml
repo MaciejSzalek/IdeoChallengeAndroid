@@ -8,4 +8,8 @@
     <string name="terrain_map">Terrain</string>
     <string name="name_tools">Tools</string>
     <string name="new_game">New Game</string>
+    <string name="time_x_1">time x 1</string>
+    <string name="time_x_4">time x 4</string>
+    <string name="time_x_8">time x 8</string>
+    <string name="new_route">New route</string>
 </resources>

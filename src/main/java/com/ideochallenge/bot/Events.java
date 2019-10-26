@@ -8,7 +8,6 @@ public class Events {
 
     public static class BotEvent {
         private Integer count = 0;
-
         public BotEvent(Integer count){
             this.count = count;
         }
@@ -20,12 +19,10 @@ public class Events {
     public static class TimerEvent {
         private Integer hours;
         private Integer minutes;
-
         public TimerEvent(Integer hours, Integer minutes){
             this.hours = hours;
             this.minutes = minutes;
         }
-
         public Integer getHours(){
             return hours;
         }
@@ -34,17 +31,17 @@ public class Events {
         }
 
     }
-
     public static class TimerScale {
-
         private Integer scale;
-
-        public TimerScale(Integer scale){
-            this.scale = scale;
-        }
-
+        public TimerScale(Integer scale){ this.scale = scale; }
         public Integer getScale() {
             return scale;
         }
+    }
+
+    public static class RouteEvent{
+        private String routeCategory;
+        public RouteEvent(String routeCategory){ this.routeCategory = routeCategory; }
+        public String getRouteCategory() {return routeCategory; }
     }
 }

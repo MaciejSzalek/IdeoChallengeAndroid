@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 
 import com.ideochallenge.R;
 import com.ideochallenge.database.DBHelper;
-import com.ideochallenge.database.HistoryRoute;
+import com.ideochallenge.database.DestinationCreator;
 import com.ideochallenge.database.RouteCreator;
 import com.ideochallenge.dialogs.NetworkDialog;
 import com.ideochallenge.models.Route;
@@ -100,7 +100,7 @@ public class StartActivity extends AppCompatActivity {
 
     private void createAllRoute(){
         try {
-            HistoryRoute.createHistoryRoute(this);
+            DestinationCreator.createDestinationDatabase(this);
             progressBar.setProgress(50);
         } catch (SQLException e) {
             e.printStackTrace();
