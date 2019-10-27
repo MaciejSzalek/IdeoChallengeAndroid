@@ -15,7 +15,13 @@ import android.widget.ProgressBar;
 
 import com.ideochallenge.R;
 import com.ideochallenge.database.DBHelper;
-import com.ideochallenge.database.DestinationCreator;
+import com.ideochallenge.database.RouteArchitectureCreator;
+import com.ideochallenge.database.RouteCultureArtCreator;
+import com.ideochallenge.database.RouteEntertainmentCreator;
+import com.ideochallenge.database.RouteMonumentsCreator;
+import com.ideochallenge.database.RouteRecreationCreator;
+import com.ideochallenge.database.RouteRestaurantsClubsCreator;
+import com.ideochallenge.database.RouteSportCreator;
 import com.ideochallenge.database.RouteCreator;
 import com.ideochallenge.dialogs.NetworkDialog;
 import com.ideochallenge.models.Route;
@@ -92,7 +98,7 @@ public class StartActivity extends AppCompatActivity {
     private void createRouteCategory(){
         try {
             RouteCreator.createRoute(this);
-            progressBar.setProgress(25);
+            progressBar.setProgress(10);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -100,8 +106,20 @@ public class StartActivity extends AppCompatActivity {
 
     private void createAllRoute(){
         try {
-            DestinationCreator.createDestinationDatabase(this);
+            RouteArchitectureCreator.createRouteArchitectur(this);
+            progressBar.setProgress(20);
+            RouteCultureArtCreator.createRouteCultureArt(this);
+            progressBar.setProgress(30);
+            RouteEntertainmentCreator.createRouteEntertainment(this);
+            progressBar.setProgress(40);
+            RouteMonumentsCreator.createRouteMonuments(this);
             progressBar.setProgress(50);
+            RouteRecreationCreator.createRouteRecreation(this);
+            progressBar.setProgress(60);
+            RouteRestaurantsClubsCreator.createRouteRestaurantsClubs(this);
+            progressBar.setProgress(70);
+            RouteSportCreator.createRouteSport(this);
+            progressBar.setProgress(80);
         } catch (SQLException e) {
             e.printStackTrace();
         }
