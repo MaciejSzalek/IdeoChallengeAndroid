@@ -113,7 +113,7 @@ public class BotCreator {
     }
 
     private long randomPoints(){
-        int min = 1;
+        int min = 2;
         int max = 5;
         Random random = new Random();
         return random.nextInt((max - min) + 1) + min;

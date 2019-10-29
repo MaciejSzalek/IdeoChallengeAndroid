@@ -8,4 +8,5 @@
     <color name="txtColor">#000000</color>
     <color name="selectorBackground">#34906e9f</color>
     <color name="navigationBackground">#78968d8d</color>
+    <color name="transparent">#00ffffff</color>
 </resources>

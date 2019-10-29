@@ -7,14 +7,14 @@
             android:title="@string/new_game" />
 
         <item
-            android:id="@+id/best_track"
-            android:title="Best Track" />
+            android:id="@+id/route_statistic"
+            android:title="@string/route_statistic" />
         <item
             android:id="@+id/best_place"
             android:title="Best place" />
 
         <item
             android:id="@+id/finish"
-            android:title="Finish" />
+            android:title="@string/finish" />
     </group>
 </menu>

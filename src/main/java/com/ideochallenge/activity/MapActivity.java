@@ -190,12 +190,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     goToNewGameActivity();
                     drawerLayout.closeDrawers();
 
-                } else if (itemId == R.id.best_track) {
-                    goToTestActivity(findViewById(R.id.activity_test));
+                } else if (itemId == R.id.route_statistic) {
+                    goToRouteStatisticActivity();
                     drawerLayout.closeDrawers();
 
                 } else if (itemId == R.id.best_place) {
-
+                    goToTestActivity(findViewById(R.id.activity_test));
                     drawerLayout.closeDrawers();
 
                 } else if (itemId == R.id.finish) {
@@ -246,8 +246,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     public void goToNewGameActivity(){
-        Intent intent = new Intent(this, NewGameActivity.class);
+        Intent intent = new Intent(this, NewRouteActivity.class);
         startActivityForResult(intent, NEW_GAME_REQUEST_CODE);
+    }
+
+    public void goToRouteStatisticActivity(){
+        Intent intent = new Intent(this, RouteStatisticActivity.class);
+        startActivity(intent);
     }
 
     public void goToTestActivity(View view){

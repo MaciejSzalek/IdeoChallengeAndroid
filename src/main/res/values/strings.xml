@@ -12,4 +12,12 @@
     <string name="time_x_4">time x 4</string>
     <string name="time_x_8">time x 8</string>
     <string name="new_route">New route</string>
+    <string name="title_activity_statistic">StatisticActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title">title</string>
+    <string name="visitors">Visitors</string>
+    <string name="rating">Rating</string>
+    <string name="route">Route</string>
+    <string name="route_statistic">Route statistic</string>
+    <string name="finish">Finish</string>
 </resources>

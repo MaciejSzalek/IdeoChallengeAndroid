@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.ideochallenge.R;
 import com.ideochallenge.database.DBHelper;
 import com.ideochallenge.models.Route;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NewGameActivity extends AppCompatActivity {
+public class NewRouteActivity extends AppCompatActivity {
 
     DBHelper dbHelper;
     EditText loadRouteCategory;
@@ -41,10 +40,10 @@ public class NewGameActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        loadRouteCategory = findViewById(R.id.load_project_name);
-        loadRouteListView = findViewById(R.id.load_project_list);
+        loadRouteCategory = findViewById(R.id.load_route_name);
+        loadRouteListView = findViewById(R.id.load_route_list);
 
-        Toolbar toolbar = findViewById(R.id.load_project_toolbar);
+        Toolbar toolbar = findViewById(R.id.new_route_toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.toolbarTxtColor));
         toolbar.setTitle("New Game");
         setSupportActionBar(toolbar);
@@ -80,10 +79,10 @@ public class NewGameActivity extends AppCompatActivity {
                 goToMapActivityWithResult();
             }else{
                 if(TextUtils.isEmpty(text)){
-                    Toast.makeText(NewGameActivity.this, "Click on list or write route name",
+                    Toast.makeText(NewRouteActivity.this, "Click on list or write route name",
                             Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(NewGameActivity.this, "Route doesn't exists",
+                    Toast.makeText(NewRouteActivity.this, "Route doesn't exists",
                             Toast.LENGTH_SHORT).show();
                 }
             }

@@ -25,7 +25,8 @@
         </activity>
         <activity android:name=".activity.MapActivity" />
         <activity android:name=".activity.Test" />
-        <activity android:name=".activity.NewGameActivity"></activity>
+        <activity android:name=".activity.NewRouteActivity" />
+        <activity android:name=".activity.RouteStatisticActivity"></activity>
     </application>
 
 </manifest>
