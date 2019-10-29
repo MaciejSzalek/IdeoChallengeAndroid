@@ -20,4 +20,8 @@
     <string name="route">Route</string>
     <string name="route_statistic">Route statistic</string>
     <string name="finish">Finish</string>
+    <string name="order">Order</string>
+    <string name="order_name">by Name A-Z</string>
+    <string name="order_visitors">by Visitors</string>
+    <string name="order_rating">by Rating</string>
 </resources>

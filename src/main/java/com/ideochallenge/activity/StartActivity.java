@@ -95,6 +95,59 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+    private void goToMapActivity(){
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
+    }
+
+    private void lunchProgressBar(){
+        progressBar.setProgress(0);
+        progressBar.setVisibility(View.VISIBLE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=1; i<=100; i++){
+                    try {
+                        Thread.sleep(100);
+                        progressBar.setProgress(i);
+                        i = i + 1;
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+                goToMapActivity();
+                finish();
+            }
+        }).start();
+    }
+
+    private boolean isConnectedToNetwork(){
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean isConnected = false;
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            isConnected = (activeNetwork != null) && (activeNetwork.isConnectedOrConnecting());
+        }
+        return isConnected;
+    }
+
+    private void getNearbyFromGoogle(){
+        List<String> typeList = new ArrayList<>();
+        typeList.add("bank");
+        typeList.add("atm");
+        typeList.add("school");
+        for(String type: typeList){
+            String url = getNearbyUrl(50.032397, 22.000574, type);
+            Object[] DataTransfer = new Object[1];
+            DataTransfer[0] = url;
+            NearbyDataGetter getNearbyPlacesData = new NearbyDataGetter(StartActivity.this);
+            getNearbyPlacesData.execute(DataTransfer);
+        }
+        progressBar.setProgress(75);
+    }
+
     private void createRouteCategory(){
         try {
             RouteCreator.createRoute(this);
@@ -125,38 +178,6 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
-    private void goToMapActivity(){
-        Intent intent = new Intent(this, MapActivity.class);
-        startActivity(intent);
-    }
-
-    private boolean isConnectedToNetwork(){
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        boolean isConnected = false;
-        if (connectivityManager != null) {
-            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-            isConnected = (activeNetwork != null) && (activeNetwork.isConnectedOrConnecting());
-        }
-        return isConnected;
-    }
-
-    private void getNearbyFromGoogle(){
-        List<String> typeList = new ArrayList<>();
-        typeList.add("bank");
-        typeList.add("atm");
-        typeList.add("school");
-        for(String type: typeList){
-            String url = getNearbyUrl(50.032397, 22.000574, type);
-            Object[] DataTransfer = new Object[1];
-            DataTransfer[0] = url;
-            NearbyDataGetter getNearbyPlacesData = new NearbyDataGetter(StartActivity.this);
-            getNearbyPlacesData.execute(DataTransfer);
-        }
-        progressBar.setProgress(75);
-    }
-
     private String getNearbyUrl(double latitude, double longitude, String nearbyPlace) {
         int PROXIMITY_RADIUS = 5000;
         StringBuilder googlePlacesUrl =
@@ -168,26 +189,5 @@ public class StartActivity extends AppCompatActivity {
         googlePlacesUrl.append("&key=" + getString(R.string.API_KEY));
         Log.d("getUrl", googlePlacesUrl.toString());
         return (googlePlacesUrl.toString());
-    }
-
-    private void lunchProgressBar(){
-        progressBar.setProgress(0);
-        progressBar.setVisibility(View.VISIBLE);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for(int i=1; i<=100; i++){
-                    try {
-                        Thread.sleep(100);
-                        progressBar.setProgress(i);
-                        i = i + 1;
-                    } catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
-                }
-                goToMapActivity();
-                finish();
-            }
-        }).start();
     }
 }

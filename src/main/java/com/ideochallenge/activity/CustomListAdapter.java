@@ -11,7 +11,7 @@ import com.ideochallenge.R;
 import com.ideochallenge.models.Destination;
 import com.ideochallenge.models.Route;
 
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -21,22 +21,25 @@ import java.util.List;
 public class CustomListAdapter extends BaseAdapter {
 
     private Context context;
-    private List<Route> arrayList;
+    private List<Route> routeList;
+    private List<Destination> destinationList;
 
     public CustomListAdapter(Context context,
-                             List<Route> routeArrayList){
+                             List<Route> routeArrayList,
+                             List<Destination> destinationList){
         this.context = context;
-        this.arrayList = routeArrayList;
+        this.routeList = routeArrayList;
+        this.destinationList = destinationList;
     }
 
     @Override
     public int getCount() {
-        return arrayList.size();
+        return routeList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return arrayList.get(position);
+        return routeList.get(position);
     }
 
     @Override
@@ -56,10 +59,26 @@ public class CustomListAdapter extends BaseAdapter {
         TextView visitors = view.findViewById(R.id.custom_list_visitors);
         TextView rating = view.findViewById(R.id.custom_list_rating);
 
-        title.setText(arrayList.get(position).getCategory());
-        visitors.setText(String.valueOf(arrayList.get(position).getVisitors()));
-        double rat = (arrayList.get(position).getPoints());
-        rating.setText(String.valueOf(rat));
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+
+        if(routeList != null){
+            title.setText(routeList.get(position).getCategory());
+            visitors.setText(String.valueOf(routeList.get(position).getVisitors()));
+            double dRating = (routeList.get(position).getPoints()
+                / routeList.get(position).getVisitors());
+            String strRating = decimalFormat.format(dRating);
+            rating.setText(strRating);
+        }
+
+        if(destinationList != null){
+            title.setText(destinationList.get(position).getName());
+            visitors.setText(String.valueOf(destinationList.get(position).getVisitors()));
+            double dRating = (destinationList.get(position).getPoints()
+                    / destinationList.get(position).getVisitors());
+            String strRating = decimalFormat.format(dRating);
+            rating.setText(strRating);
+        }
+
         return view;
     }
 }

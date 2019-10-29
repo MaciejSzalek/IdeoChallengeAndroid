@@ -21,44 +21,49 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8sp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="8sp"
+        android:layout_marginStart="8sp"
+        android:layout_marginEnd="8sp"
         android:padding="8sp"
         android:layout_below="@+id/route_statistic_toolbar"
-        android:orientation="horizontal"
         android:id="@+id/route_statistic_head">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="6"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/statistic_visitors_txt"
+            android:gravity="center"
             android:textColor="@color/txtColor"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:text="@string/route"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/statistic_visitors_txt"
+            android:layout_width="80sp"
             android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:layout_weight="1"
+            android:layout_toStartOf="@+id/statistic_rating_txt"
+            android:gravity="center"
             android:textAlignment="center"
             android:textColor="@color/txtColor"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:text="@string/visitors"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/statistic_rating_txt"
+            android:layout_width="80sp"
             android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:layout_weight="1"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
             android:textAlignment="center"
             android:textColor="@color/txtColor"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:text="@string/rating"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/route_statistic_list"
@@ -67,7 +72,6 @@
         android:layout_below="@+id/route_statistic_head"
         android:layout_marginStart="8sp"
         android:layout_marginEnd="8sp"
-        android:layout_marginTop="8sp"
         android:layout_marginBottom="8sp"
         android:choiceMode="singleChoice"
         android:listSelector="@color/selectorBackground"/>

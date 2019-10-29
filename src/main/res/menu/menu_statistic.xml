@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        app:showAsAction="ifRoom"
+        android:id="@+id/segregation_type"
+        android:orderInCategory="200"
+        android:icon="@drawable/icon_menu"
+        android:title="@string/order">
+        <menu>
+            <item
+                app:showAsAction="never"
+                android:id="@+id/order_name"
+                android:orderInCategory="100"
+                android:title="@string/order_name"/>
+
+            <item
+                app:showAsAction="never"
+                android:id="@+id/order_visitors"
+                android:orderInCategory="200"
+                android:title="@string/order_visitors"/>
+
+            <item
+                app:showAsAction="never"
+                android:id="@+id/order_rating"
+                android:orderInCategory="300"
+                android:title="@string/order_rating"/>
+        </menu>
+    </item>
+</menu>

@@ -31,7 +31,7 @@ public class Route {
     private String category;
 
     @DatabaseField(columnName = COLUMN_POINTS)
-    private long points;
+    private double points;
 
     @DatabaseField(columnName = COLUMN_VISITORS)
     private long visitors;
@@ -52,11 +52,11 @@ public class Route {
         this.category = category;
     }
 
-    public long getPoints() {
+    public double getPoints() {
         return points;
     }
 
-    public void setPoints(long points) {
+    public void setPoints(double points) {
         this.points = points;
     }
 

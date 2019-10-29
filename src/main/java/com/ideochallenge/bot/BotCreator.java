@@ -71,7 +71,7 @@ public class BotCreator {
             e.printStackTrace();
         }
         for(Destination destination: destinationList){
-            long points = destination.getPoints() + randomPoints();
+            double points = destination.getPoints() + randomPoints();
             long visitors = destination.getVisitors() + 1;
             destination.setPoints(points);
             destination.setVisitors(visitors);

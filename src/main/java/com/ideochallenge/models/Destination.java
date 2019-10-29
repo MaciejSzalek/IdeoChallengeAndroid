@@ -47,7 +47,7 @@ public class Destination {
     private double lng;
 
     @DatabaseField(columnName = COLUMN_POINTS)
-    private long points;
+    private double points;
 
     @DatabaseField(columnName = COLUMN_VISITORS)
     private long visitors;
@@ -92,11 +92,11 @@ public class Destination {
         this.lng = lng;
     }
 
-    public long getPoints() {
+    public double getPoints() {
         return points;
     }
 
-    public void setPoints(long points) {
+    public void setPoints(double points) {
         this.points = points;
     }
 
