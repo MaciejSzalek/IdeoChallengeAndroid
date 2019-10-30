@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_png"
-    tools:context="com.ideochallenge.activity.RouteStatisticActivity"
-    android:id="@+id/route_statistic_layout">
+    tools:context="com.ideochallenge.activity.DestinationStatisticActivity">
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +16,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/toolbarBackgroundColor"
         app:navigationIcon="@drawable/arrow_back"
-        android:id="@+id/route_statistic_toolbar">
+        android:id="@+id/destination_statistic_toolbar">
 
     </android.support.v7.widget.Toolbar>
 
@@ -28,8 +27,8 @@
         android:layout_marginStart="8sp"
         android:layout_marginEnd="8sp"
         android:padding="8sp"
-        android:layout_below="@+id/route_statistic_toolbar"
-        android:id="@+id/route_statistic_head">
+        android:layout_below="@+id/destination_statistic_toolbar"
+        android:id="@+id/destination_statistic_head">
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +38,7 @@
             android:gravity="start|center"
             android:textColor="@color/txtColor"
             android:textSize="18sp"
-            android:text="@string/route"/>
+            android:text="@string/destination"/>
 
         <TextView
             android:id="@+id/statistic_visitors_txt"
@@ -57,7 +56,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:gravity="center"
-
             android:textColor="@color/txtColor"
             android:textSize="18sp"
             android:text="@string/rating"/>
@@ -65,10 +63,10 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/route_statistic_list"
+        android:id="@+id/destination_statistic_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/route_statistic_head"
+        android:layout_below="@+id/destination_statistic_head"
         android:layout_marginStart="8sp"
         android:layout_marginEnd="8sp"
         android:layout_marginBottom="8sp"

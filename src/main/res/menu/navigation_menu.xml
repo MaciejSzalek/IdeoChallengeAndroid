@@ -3,15 +3,15 @@
     <group
         android:checkableBehavior="single">
         <item
-            android:id="@+id/new_game"
-            android:title="@string/new_game" />
+            android:id="@+id/new_route"
+            android:title="@string/new_route" />
 
         <item
             android:id="@+id/route_statistic"
             android:title="@string/route_statistic" />
         <item
-            android:id="@+id/best_place"
-            android:title="Best place" />
+            android:id="@+id/destination_statistic"
+            android:title="@string/destination_statistic" />
 
         <item
             android:id="@+id/finish"

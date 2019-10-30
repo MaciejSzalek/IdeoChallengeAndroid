@@ -148,16 +148,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 int itemId = item.getItemId();
 
-                if (itemId == R.id.new_game) {
-                    goToNewGameActivity();
+                if (itemId == R.id.new_route) {
+                    goToNewRouteActivity();
                     drawerLayout.closeDrawers();
 
                 } else if (itemId == R.id.route_statistic) {
                     goToRouteStatisticActivity();
                     drawerLayout.closeDrawers();
 
-                } else if (itemId == R.id.best_place) {
-                    goToTestActivity(findViewById(R.id.activity_test));
+                } else if (itemId == R.id.destination_statistic) {
+                    goToDestinationStatisticActivity();
                     drawerLayout.closeDrawers();
 
                 } else if (itemId == R.id.finish) {
@@ -207,13 +207,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-    public void goToNewGameActivity(){
+    public void goToNewRouteActivity(){
         Intent intent = new Intent(this, NewRouteActivity.class);
         startActivityForResult(intent, NEW_ROUTE_REQUEST_CODE);
     }
 
     public void goToRouteStatisticActivity(){
         Intent intent = new Intent(this, RouteStatisticActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToDestinationStatisticActivity(){
+        Intent intent = new Intent(this, DestinationStatisticActivity.class);
         startActivity(intent);
     }
 
@@ -309,6 +314,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void drawPlayerTargetMarker(){
+        if(targetMarker != null){
+            targetMarker.remove();
+        }
         MarkerOptions markerOptions;
         markerOptions = new MarkerOptions();
         markerOptions.position(mDest);

@@ -34,11 +34,17 @@ public class CustomListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if(destinationList != null){
+            return destinationList.size();
+        }
         return routeList.size();
     }
 
     @Override
     public Object getItem(int position) {
+        if(destinationList != null){
+            destinationList.get(position);
+        }
         return routeList.get(position);
     }
 
@@ -78,7 +84,6 @@ public class CustomListAdapter extends BaseAdapter {
             String strRating = decimalFormat.format(dRating);
             rating.setText(strRating);
         }
-
         return view;
     }
 }
