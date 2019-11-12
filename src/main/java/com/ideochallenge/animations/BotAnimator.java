@@ -1,18 +1,13 @@
 package com.ideochallenge.animations;
 
-import android.content.Context;
-import android.location.Location;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.ideochallenge.bot.BotCounter;
-import com.ideochallenge.database.DBHelper;
-import com.ideochallenge.models.NearbyPlace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +60,6 @@ public class BotAnimator implements Runnable {
             }
         }
     }
-
-    private LatLng getEndLatLng() {
-        return destinationLatLngList.get(currentIndex + 1);
-    }
-
-    private LatLng getBeginLatLng() {
-        return destinationLatLngList.get(currentIndex);
-    }
+    private LatLng getEndLatLng() { return destinationLatLngList.get(currentIndex + 1); }
+    private LatLng getBeginLatLng() { return destinationLatLngList.get(currentIndex); }
 }

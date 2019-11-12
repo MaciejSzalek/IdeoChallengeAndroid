@@ -18,13 +18,13 @@ import java.util.List;
  * Created by Maciej Szalek on 2019-10-28.
  */
 
-public class CustomListAdapter extends BaseAdapter {
+class CustomListAdapter extends BaseAdapter {
 
     private Context context;
     private List<Route> routeList;
     private List<Destination> destinationList;
 
-    public CustomListAdapter(Context context,
+    CustomListAdapter(Context context,
                              List<Route> routeArrayList,
                              List<Destination> destinationList){
         this.context = context;

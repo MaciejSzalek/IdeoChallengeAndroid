@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.Subscribe;
  */
 
 public class BotCounter {
+
     private static int botCount = 0;
     private static EventBus eventBus = EventBus.getDefault();
 
@@ -15,7 +16,7 @@ public class BotCounter {
         eventBus.register(this);
     }
 
-    public static int addBot() {
+    static int addBot() {
         botCount += 1;
         eventBus.post(new Events.BotEvent(botCount));
         return botCount;
@@ -30,10 +31,9 @@ public class BotCounter {
             return botCount -= 1;
         }
     }
-    public static int getBotCount(){
-        return botCount;
-    }
 
     @Subscribe
-    public void getBotEvent(Events.BotEvent botEvent){}
+    public void getBotEvent(Events.BotEvent botEvent){
+        //botCount = botEvent.getCount();
+    }
 }

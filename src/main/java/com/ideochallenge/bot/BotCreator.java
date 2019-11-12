@@ -7,10 +7,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.ideochallenge.R;
 import com.ideochallenge.animations.BotAnimator;
 import com.ideochallenge.database.DBHelper;
 import com.ideochallenge.models.Destination;
-import com.ideochallenge.models.NearbyPlace;
 import com.ideochallenge.models.Route;
 
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ import java.util.Random;
  * Created by Maciej Szalek on 2019-10-14.
  */
 
-public class BotCreator {
+class BotCreator {
 
     private DBHelper dbHelper;
     private GoogleMap mMap;
@@ -35,13 +35,12 @@ public class BotCreator {
     private List<Destination> destinationList = new ArrayList<>();
     private List<LatLng> destinationLatLngList = new ArrayList<>();
 
-    public BotCreator(Context context, GoogleMap map){
+    BotCreator(Context context, GoogleMap map){
         this.context = context;
         this.mMap = map;
-        //this.botMarker = botMarker;
     }
 
-    public void createNewBot(){
+    void createNewBot(){
         getAndUpdateRoute();
         getAndUpdateDestinationFromCategory();
         convertDestinationToLatLng();
@@ -86,8 +85,7 @@ public class BotCreator {
     private void startBotAnimation(){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(destinationLatLngList.get(0));
-        markerOptions.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.man_24));
         botMarker = mMap.addMarker(markerOptions);
         botAnimator = new BotAnimator(botMarker, destinationLatLngList);
         botAnimator.run();

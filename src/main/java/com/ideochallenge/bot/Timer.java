@@ -15,17 +15,17 @@ import org.greenrobot.eventbus.Subscribe;
  */
 public class Timer {
 
-    private Handler timerHandler = new Handler();
+    private static Handler timerHandler = new Handler();
     private static EventBus eventBus = EventBus.getDefault();
 
-    private Long timeInMillisecond;
-    private Long timeSwapBuff = 0L;
-    private Long updatedTime = 0L;
-    private Long startTime = 0L;
-    private int clock24 = 24;
-    private int scale = 1;
-    private int seconds;
-    private int minutes = 0;
+    private static Long timeInMillisecond;
+    private static Long timeSwapBuff = 0L;
+    private static Long updatedTime = 0L;
+    private static Long startTime = 0L;
+    private static int clock24 = 24;
+    private static int scale = 1;
+    private static int seconds;
+    private static int minutes = 0;
     // 1 virtual hour = 60000 milliseconds
     private Long converter = 60000L;
 
@@ -33,12 +33,12 @@ public class Timer {
         eventBus.register(this);
     }
 
-    private Runnable updatedTimerThread = new Runnable() {
+    private static Runnable updatedTimerThread = new Runnable() {
         @Override
         public void run() {
 
             timeInMillisecond = (SystemClock.uptimeMillis() - startTime) * scale;
-            //application virtual time start 12:00 o'clock
+            //application virtual time start 15:00 o'clock
             updatedTime = timeSwapBuff + timeInMillisecond;
 
             seconds = (int) (updatedTime/1000);
@@ -79,7 +79,7 @@ public class Timer {
         timerHandler.postDelayed(updatedTimerThread, 0);
     }
 
-    public void stopTimer(){
+    private void stopTimer(){
         timeSwapBuff += timeInMillisecond;
         timerHandler.removeCallbacks(updatedTimerThread);
     }

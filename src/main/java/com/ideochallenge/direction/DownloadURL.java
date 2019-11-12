@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.ideochallenge.R;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,19 +21,21 @@ import java.net.URL;
 public class DownloadURL extends AsyncTask<String, Void, String> {
     private Context mContext;
     private String directionMode = "walking";
+    private LatLng origin, dest;
 
-    public DownloadURL(Context mContext) {
+    public DownloadURL(Context mContext, LatLng origin, LatLng dest) {
         this.mContext = mContext;
+        this.origin = origin;
+        this.dest = dest;
     }
 
     @Override
     protected String doInBackground(String... strings) {
         // For storing data from web service
         String data = "";
-        directionMode = strings[1];
         try {
             // Fetching the data from web service
-            data = downloadUrl(strings[0]);
+            data = downloadUrl(getRouteUrl());
             Log.d("Log", "Background task data " + data);
         } catch (Exception e) {
             Log.d("Background Task", e.toString());
@@ -71,5 +76,16 @@ public class DownloadURL extends AsyncTask<String, Void, String> {
             urlConnection.disconnect();
         }
         return data;
+    }
+
+    private String getRouteUrl() {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameters = str_origin + "&" + str_dest + "&" + mode;
+        String output = "json";
+
+        return "https://maps.googleapis.com/maps/api/directions/" + output
+                + "?" + parameters + "&key=" + mContext.getString(R.string.API_KEY);
     }
 }

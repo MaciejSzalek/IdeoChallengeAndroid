@@ -19,7 +19,7 @@ public class Events {
     public static class TimerEvent {
         private Integer hours;
         private Integer minutes;
-        public TimerEvent(Integer hours, Integer minutes){
+        TimerEvent(Integer hours, Integer minutes){
             this.hours = hours;
             this.minutes = minutes;
         }
@@ -34,14 +34,8 @@ public class Events {
     public static class TimerScale {
         private Integer scale;
         public TimerScale(Integer scale){ this.scale = scale; }
-        public Integer getScale() {
+        Integer getScale() {
             return scale;
         }
-    }
-
-    public static class RouteEvent{
-        private String routeCategory;
-        public RouteEvent(String routeCategory){ this.routeCategory = routeCategory; }
-        public String getRouteCategory() {return routeCategory; }
     }
 }

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="32sp"
+    android:padding="8sp"
+    android:background="@drawable/background_png">
+
+    <TextView
+        android:id="@+id/tutorial_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:textColor="@color/txtColor"
+        android:textSize="18sp"
+        android:text="@string/tutorial_welcome"/>
+
+    <ScrollView
+        android:background="@color/translucent"
+        android:id="@+id/tutorial_scrollView"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8sp"
+        android:layout_marginRight="8sp"
+        android:layout_below="@+id/tutorial_title"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center"
+                android:layout_margin="8sp"
+                android:fontFamily="sans-serif"
+                android:text="@string/tutorial_description"
+                android:textColor="@color/txtColor"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8sp"
+                android:layout_gravity="start|center"
+                android:textColor="@color/txtColor"
+                android:textSize="18sp"
+                android:text="@string/legend"/>
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:layout_gravity="start|center"
+                    android:src="@drawable/man_48"
+                    android:contentDescription="@string/player_marker" />
+
+                <TextView
+                    android:layout_row="0"
+                    android:layout_column="1"
+                    android:layout_columnSpan="2"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center"
+                    android:textColor="@color/txtColor"
+                    android:textSize="16sp"
+                    android:text="@string/player_marker"/>
+
+                <ImageView
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8sp"
+                    android:src="@drawable/man_24"
+                    android:contentDescription="@string/bot_marker" />
+
+                <TextView
+                    android:layout_row="1"
+                    android:layout_column="1"
+                    android:layout_columnSpan="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8sp"
+                    android:layout_gravity="start|center"
+                    android:textColor="@color/txtColor"
+                    android:textSize="16sp"
+                    android:text="@string/bot_marker"/>
+
+                <ImageView
+                    android:layout_row="2"
+                    android:layout_column="0"
+                    android:layout_marginTop="8sp"
+                    android:layout_gravity="start|center"
+                    android:src="@drawable/target_48"
+                    android:contentDescription="@string/target_marker" />
+
+                <TextView
+                    android:layout_row="2"
+                    android:layout_column="1"
+                    android:layout_columnSpan="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8sp"
+                    android:layout_gravity="start|center"
+                    android:textColor="@color/txtColor"
+                    android:textSize="16sp"
+                    android:text="@string/target_marker"/>
+
+                <ImageView
+                    android:layout_row="3"
+                    android:layout_column="0"
+                    android:layout_marginTop="8sp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/flag_24"
+                    android:contentDescription="@string/route_destination" />
+
+                <TextView
+                    android:layout_row="3"
+                    android:layout_column="1"
+                    android:layout_columnSpan="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8sp"
+                    android:layout_gravity="start|center"
+                    android:textColor="@color/txtColor"
+                    android:textSize="16sp"
+                    android:text="@string/route_destination"/>
+
+                <ImageView
+                    android:layout_row="4"
+                    android:layout_column="0"
+                    android:layout_marginTop="8sp"
+                    android:layout_marginBottom="8sp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/nearby_24"
+                    android:contentDescription="@string/google_nearby_places" />
+
+                <TextView
+                    android:layout_row="4"
+                    android:layout_column="1"
+                    android:layout_columnSpan="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8sp"
+                    android:layout_marginBottom="8sp"
+                    android:layout_gravity="start|center"
+                    android:textColor="@color/txtColor"
+                    android:textSize="16sp"
+                    android:text="@string/google_nearby_places"/>
+            </GridLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/tutorial_ok_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="18sp"
+        android:background="@color/toolbarBackgroundColor"
+        android:textColor="@color/toolbarTxtColor"
+        android:text="@string/ok_btn"/>
+</RelativeLayout>

@@ -19,12 +19,12 @@ import java.util.List;
  * Created by Maciej Szalek on 2019-10-09.
  */
 
-public class RoutePointsParser extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+class RoutePointsParser extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
     private TaskLoadedCallback taskCallback;
     private String directionMode = "walking";
     private Context context;
 
-    public RoutePointsParser(Context mContext, String directionMode) {
+    RoutePointsParser(Context mContext, String directionMode) {
         this.taskCallback = (TaskLoadedCallback) mContext;
         this.directionMode = directionMode;
         this.context = mContext;
@@ -60,7 +60,7 @@ public class RoutePointsParser extends AsyncTask<String, Integer, List<List<Hash
     protected void onPostExecute(List<List<HashMap<String, String>>> result) {
         try{
             ArrayList<LatLng> points = null;
-            PolylineOptions lineOptions = null;
+            PolylineOptions lineOptions;
             // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<>();

@@ -8,7 +8,6 @@ import com.ideochallenge.models.NearbyPlace;
 import com.ideochallenge.models.Route;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 

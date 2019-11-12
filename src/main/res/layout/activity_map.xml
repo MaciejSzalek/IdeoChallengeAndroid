@@ -25,12 +25,6 @@
             app:navigationIcon="@drawable/icon_menu2">
         </android.support.v7.widget.Toolbar>
 
-        <Button
-            android:id="@+id/test_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="TEST"/>
-
         <TextView
             android:id="@+id/test_txt"
             android:layout_width="match_parent"

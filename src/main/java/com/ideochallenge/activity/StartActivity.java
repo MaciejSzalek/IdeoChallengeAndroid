@@ -23,6 +23,7 @@ import com.ideochallenge.database.RouteRecreationCreator;
 import com.ideochallenge.database.RouteRestaurantsClubsCreator;
 import com.ideochallenge.database.RouteSportCreator;
 import com.ideochallenge.database.RouteCreator;
+import com.ideochallenge.dialogs.NetworkDialog;
 import com.ideochallenge.models.Route;
 import com.ideochallenge.nearby.NearbyDataGetter;
 
@@ -47,18 +48,7 @@ public class StartActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
         progressBar.setProgress(0);
 
-        try {
-            routeList = dbHelper.getAllRoute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if(routeList.isEmpty()){
-            new DatabaseTask().execute();
-        } else {
-            lunchProgressBar();
-        }
-
-        /*if(isConnectedToNetwork()){
+        if(isConnectedToNetwork()){
             try {
                 routeList = dbHelper.getAllRoute();
             } catch (SQLException e) {
@@ -71,7 +61,7 @@ public class StartActivity extends AppCompatActivity {
             }
         } else {
             NetworkDialog.showNetworkDialog(this);
-        }*/
+        }
     }
 
     private class DatabaseTask extends AsyncTask<String, Integer, String> {
@@ -169,7 +159,7 @@ public class StartActivity extends AppCompatActivity {
 
     private void createAllRoute(){
         try {
-            RouteArchitectureCreator.createRouteArchitectur(this);
+            RouteArchitectureCreator.createRouteArchitecture(this);
             progressBar.setProgress(20);
             RouteCultureArtCreator.createRouteCultureArt(this);
             progressBar.setProgress(30);

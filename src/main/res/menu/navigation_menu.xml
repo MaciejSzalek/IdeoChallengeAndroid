@@ -14,7 +14,7 @@
             android:title="@string/destination_statistic" />
 
         <item
-            android:id="@+id/finish"
-            android:title="@string/finish" />
+            android:id="@+id/exit"
+            android:title="@string/exit" />
     </group>
 </menu>

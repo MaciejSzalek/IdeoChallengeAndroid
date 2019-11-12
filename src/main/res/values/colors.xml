@@ -3,10 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="toolbarBackgroundColor">#184454</color>
+    <color name="toolbarBackgroundColor">#741183</color>
     <color name="toolbarTxtColor">#ffffff</color>
     <color name="txtColor">#000000</color>
     <color name="selectorBackground">#34906e9f</color>
     <color name="navigationBackground">#78968d8d</color>
     <color name="transparent">#00ffffff</color>
+    <color name="translucent">#6a605f5f</color>
 </resources>

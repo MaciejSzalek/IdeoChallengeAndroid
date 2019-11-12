@@ -13,9 +13,9 @@ import java.util.List;
  * Created by Maciej Szalek on 2019-10-09.
  */
 
-public class RouteDataParser {
+class RouteDataParser {
 
-    public List<List<HashMap<String, String>>> parse(JSONObject jObject) {
+    List<List<HashMap<String, String>>> parse(JSONObject jObject) {
 
         List<List<HashMap<String, String>>> routes = new ArrayList<>();
         JSONArray jRoutes;

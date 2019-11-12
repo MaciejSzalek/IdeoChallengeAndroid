@@ -12,22 +12,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.ideochallenge.R;
 import com.ideochallenge.animations.PlayerAnimator;
 import com.ideochallenge.bot.Events;
 import com.ideochallenge.bot.BotManager;
 import com.ideochallenge.bot.Timer;
 import com.ideochallenge.database.DBHelper;
+import com.ideochallenge.dialogs.CloseAppDialog;
+import com.ideochallenge.dialogs.TutorialDialog;
 import com.ideochallenge.direction.DownloadURL;
 import com.ideochallenge.direction.TaskLoadedCallback;
 import com.ideochallenge.models.Destination;
@@ -36,7 +35,6 @@ import com.ideochallenge.models.NearbyPlace;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +48,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private EventBus eventBus = EventBus.getDefault();
     private DBHelper dbHelper;
     private BotManager botManager;
+    private Timer timer;
 
     private GoogleMap mMap;
     private Marker playerMarker;
@@ -57,14 +56,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private List<Destination> playerDestinationList = new ArrayList<>();
     private List<NearbyPlace> nearbyDatabaseList = new ArrayList<>();
-    private List<Marker> destinationMarkerList = new ArrayList<>();
+    private ArrayList<Marker> destinationMarkerList = new ArrayList<>();
+    private ArrayList<Marker> botMarkerList = new ArrayList<>();
 
     private LatLng mOrigin;
     private LatLng mDest;
 
+    private boolean timerStatus = false;
+    private String routeCategory;
     private Integer timerHours = 0;
     private Integer timerMinutes = 0;
-    private Integer botCount = 0;
+    private static Integer botCount = 0;
 
     private static final int NEW_ROUTE_REQUEST_CODE = 0;
 
@@ -73,13 +75,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
-        setNavigationDrawer();
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map_fragment);
-        mapFragment.getMapAsync(this);
 
         Toolbar toolbar = findViewById(R.id.map_toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.toolbarTxtColor));
@@ -91,15 +86,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        Button button = findViewById(R.id.test_btn);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map_fragment);
+        mapFragment.getMapAsync(this);
+
         txtView = findViewById(R.id.test_txt);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        setNavigationDrawer();
 
         dbHelper = new DBHelper(this);
         eventBus.register(this);
-        Timer timer = new Timer();
-        timer.startTimer();
+        TutorialDialog.showTutorialDialog(this);
 
         if (savedInstanceState != null) {
+            timerStatus = savedInstanceState.getBoolean("timerStatus");
+            routeCategory = savedInstanceState.getString("routeCategory");
             double lat = savedInstanceState.getDouble("mMarkerLat");
             double lng = savedInstanceState.getDouble("mMarkerLng");
             mOrigin = new LatLng(lat, lng);
@@ -107,42 +108,124 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mOrigin = new LatLng(50.037427, 22.004873);
         }
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                botManager = new BotManager(MapActivity.this, mMap);
-                botManager.manageBot(0, timerHours);
-                //startTimer();
-            }
-        });
+        if(!timerStatus){
+            timer = new Timer();
+            timer.startTimer();
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         setMapLongClickListener(mMap);
+
         if(playerMarker == null){
-            drawPlayerMarker();
+            playerMarker = MarkerDrawer.playerMarker(mMap, mOrigin);
         }
-        drawNearbyMarkers();
+        if(routeCategory != null){
+            destinationMarkerList.clear();
+            destinationMarkerList = MarkerDrawer.destinationMarkerList(
+                    dbHelper,
+                    mMap,
+                    routeCategory);
+        }
+        nearbyDatabaseList = MarkerDrawer.nearbyMarkerList(dbHelper, mMap);
     }
 
-    private  void setMapLongClickListener(final GoogleMap map){
+    private void setMapLongClickListener(final GoogleMap map){
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
                 mOrigin = playerMarker.getPosition();
                 mDest = latLng;
-                drawPlayerTargetMarker();
-                new DownloadURL(MapActivity.this)
-                        .execute(getRouteUrl(mOrigin, mDest, "walking"), "walking");
+                if(targetMarker != null){
+                    targetMarker.remove();
+                }
+                targetMarker = MarkerDrawer.targetMarker(mMap, mDest);
+                new DownloadURL(MapActivity.this, mOrigin, mDest).execute();
             }
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putDouble("mMarkerLat", playerMarker.getPosition().latitude);
+        outState.putDouble("mMarkerLng", playerMarker.getPosition().longitude);
+        outState.putString("routeCategory", routeCategory);
+        outState.putBoolean("timerStatus", true);
+    }
+
+    @Subscribe
+    public void getBotEvent(Events.BotEvent botEvent){
+        botCount = botEvent.getCount();
+    }
+
+    @Subscribe
+    public void getTimerEvent(Events.TimerEvent timerEvent){
+        timerHours = timerEvent.getHours();
+        timerMinutes = timerEvent.getMinutes();
+        DecimalFormat decimalFormat = new DecimalFormat("#00");
+        String hours =  String.valueOf(decimalFormat.format(timerHours));
+        String minutes =  String.valueOf(decimalFormat.format(timerMinutes));
+        txtView.setText("CLOCK: " + hours + " : " + minutes + "  bot count: " + botCount);
+
+        botManager = new BotManager(this, mMap);
+        botManager.manageBot(botCount, timerHours);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK){
+            if(requestCode == NEW_ROUTE_REQUEST_CODE){
+                routeCategory = data.getStringExtra("ROUTE_CATEGORY");
+                if(!destinationMarkerList.isEmpty()){
+                    for(Marker marker: destinationMarkerList){
+                        marker.remove();
+                    }
+                    destinationMarkerList.clear();
+                }
+                destinationMarkerList = MarkerDrawer.destinationMarkerList(
+                        dbHelper,
+                        mMap,
+                        routeCategory);
+            }
+        }
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        ArrayList<LatLng> routePolylineList = (ArrayList<LatLng>) values[0];
+        if (!routePolylineList.isEmpty()){
+            PlayerAnimator playerAnimator = new PlayerAnimator(mMap, playerMarker,
+                    routePolylineList,
+                    nearbyDatabaseList);
+            playerAnimator.run();
+            targetMarker.remove();
+        }
+    }
+
+    public void goToNewRouteActivity(){
+        Intent intent = new Intent(this, NewRouteActivity.class);
+        startActivityForResult(intent, NEW_ROUTE_REQUEST_CODE);
+    }
+
+    public void goToRouteStatisticActivity(){
+        Intent intent = new Intent(this, RouteStatisticActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToDestinationStatisticActivity(){
+        Intent intent = new Intent(this, DestinationStatisticActivity.class);
+        startActivity(intent);
+    }
+
     public void setNavigationDrawer() {
         NavigationView navigationView = findViewById(R.id.navigation);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -160,8 +243,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     goToDestinationStatisticActivity();
                     drawerLayout.closeDrawers();
 
-                } else if (itemId == R.id.finish) {
-                    finish();
+                } else if (itemId == R.id.exit) {
+                    CloseAppDialog.showCloseAppDialog(MapActivity.this);
                     drawerLayout.closeDrawers();
                 }
                 return false;
@@ -204,152 +287,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-
-    public void goToNewRouteActivity(){
-        Intent intent = new Intent(this, NewRouteActivity.class);
-        startActivityForResult(intent, NEW_ROUTE_REQUEST_CODE);
-    }
-
-    public void goToRouteStatisticActivity(){
-        Intent intent = new Intent(this, RouteStatisticActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToDestinationStatisticActivity(){
-        Intent intent = new Intent(this, DestinationStatisticActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToTestActivity(View view){
-        Intent intent = new Intent(this, Test.class);
-        startActivity(intent);
-    }
-
-    @Subscribe
-    public void getBotEvent(Events.BotEvent botEvent){
-        botCount = botEvent.getCount();
-        botManager = new BotManager(this, mMap);
-        botManager.manageBot(botCount, timerHours);
-    }
-
-    @Subscribe
-    public void getTimerEvent(Events.TimerEvent timerEvent){
-        timerHours = timerEvent.getHours();
-        timerMinutes = timerEvent.getMinutes();
-        DecimalFormat decimalFormat = new DecimalFormat("#00");
-        String hours =  String.valueOf(decimalFormat.format(timerHours));
-        String minutes =  String.valueOf(decimalFormat.format(timerMinutes));
-        txtView.setText("CLOCK: " + hours + " : " + minutes + "  bot count: " + botCount);
-
-        botManager = new BotManager(this, mMap);
-        botManager.manageBot(botCount, timerHours);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putDouble("mMarkerLat", playerMarker.getPosition().latitude);
-        outState.putDouble("mMarkerLng", playerMarker.getPosition().longitude);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode == RESULT_OK){
-            if(requestCode == NEW_ROUTE_REQUEST_CODE){
-                String routeCategory = data.getStringExtra("ROUTE_CATEGORY");
-                if(!destinationMarkerList.isEmpty()){
-                    for(Marker marker: destinationMarkerList){
-                        marker.remove();
-                    }
-                    destinationMarkerList.clear();
-                }
-                setAndShowPlayerDestinationList(routeCategory);
-            }
-        }
-    }
-
-    @Override
-    public void onTaskDone(Object... values) {
-        ArrayList<LatLng> routePolylineList = (ArrayList<LatLng>) values[0];
-        if (!routePolylineList.isEmpty()){
-            PlayerAnimator playerAnimator = new PlayerAnimator(mMap, playerMarker,
-                    routePolylineList,
-                    nearbyDatabaseList);
-            playerAnimator.run();
-            targetMarker.remove();
-        }
-    }
-
-    private void setAndShowPlayerDestinationList(String routeCategory){
-        dbHelper = new DBHelper(this);
-        MarkerOptions markerOptions = new MarkerOptions();
-        try {
-            if(!playerDestinationList.isEmpty()){
-                playerDestinationList.clear();
-            }
-            playerDestinationList = dbHelper
-                    .getAllDestinationFromCategory(routeCategory);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        for(Destination destination: playerDestinationList){
-            LatLng latLng = new LatLng(destination.getLat(), destination.getLng());
-            markerOptions.position(latLng);
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.man_48));
-            Marker destinationMarker = mMap.addMarker(markerOptions);
-            destinationMarkerList.add(destinationMarker);
-        }
-    }
-
-    private void drawPlayerMarker(){
-        MarkerOptions markerOptions;
-        markerOptions = new MarkerOptions();
-        markerOptions.position(mOrigin);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.man_72));
-        playerMarker = mMap.addMarker(markerOptions);
-    }
-
-    private void drawPlayerTargetMarker(){
-        if(targetMarker != null){
-            targetMarker.remove();
-        }
-        MarkerOptions markerOptions;
-        markerOptions = new MarkerOptions();
-        markerOptions.position(mDest);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.target_48));
-        targetMarker = mMap.addMarker(markerOptions);
-    }
-
-
-    private void drawNearbyMarkers(){
-        try {
-            nearbyDatabaseList = dbHelper.getAllNearbyPlace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        for(NearbyPlace nearbyPlace: nearbyDatabaseList){
-            LatLng latLng = new LatLng(nearbyPlace.getNearbyLat(),
-                    nearbyPlace.getNearbyLng());
-            MarkerOptions markerOptions;
-            markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.nearby_24));
-            mMap.addMarker(markerOptions);
-        }
-    }
-
-    private String getRouteUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=" + directionMode;
-        String parameters = str_origin + "&" + str_dest + "&" + mode;
-        String output = "json";
-
-        return "https://maps.googleapis.com/maps/api/directions/" + output
-                + "?" + parameters + "&key=" + getString(R.string.API_KEY);
     }
 }

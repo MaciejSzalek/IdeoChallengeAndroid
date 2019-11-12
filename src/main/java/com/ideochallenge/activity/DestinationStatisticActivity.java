@@ -88,7 +88,7 @@ public class DestinationStatisticActivity extends AppCompatActivity {
         Collections.sort(destinationList, new Comparator<Destination>() {
             @Override
             public int compare(Destination destination1, Destination destination2) {
-                return destination1.getCategory().compareTo(destination2.getCategory());
+                return destination1.getName().compareTo(destination2.getName());
             }
         });
         CustomListAdapter customListAdapter = new CustomListAdapter(this, null, destinationList);

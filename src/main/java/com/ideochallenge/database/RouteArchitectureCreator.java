@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RouteArchitectureCreator {
 
-    public static void createRouteArchitectur(Context context){
+    public static void createRouteArchitecture(Context context){
 
         DBHelper dbHelper = new DBHelper(context);
         List<Destination> destinationList = new ArrayList<>();
@@ -34,7 +34,7 @@ public class RouteArchitectureCreator {
                         10, 2));
         destinationList.add
                 (new Destination("Architecture", "Okrągła Kładka dla Pieszych",
-                        50.037857, 22.002773,
+                        50.040745, 22.002599,
                         10, 2));
         destinationList.add
                 (new Destination("Architecture", "Wille Secesyjne",

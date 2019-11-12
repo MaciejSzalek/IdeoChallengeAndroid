@@ -13,9 +13,9 @@ import java.net.URL;
  * Created by Maciej Szalek on 2019-10-18.
  */
 
-public class NearbyDownloadUrl {
+class NearbyDownloadUrl {
 
-    public String readUrl(String strUrl) throws IOException {
+    String readUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;

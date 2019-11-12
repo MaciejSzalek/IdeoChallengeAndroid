@@ -14,15 +14,15 @@ import java.util.List;
  * Created by Maciej Szalek on 2019-10-18.
  */
 
-public class NearbyDataParser {
+class NearbyDataParser {
 
-    public List<HashMap<String, String>> parse(String jsonData) {
+    List<HashMap<String, String>> parse(String jsonData) {
         JSONArray jsonArray = null;
         JSONObject jsonObject;
 
         try {
             Log.d("Places", "parse");
-            jsonObject = new JSONObject((String) jsonData);
+            jsonObject = new JSONObject(jsonData);
             jsonArray = jsonObject.getJSONArray("results");
         } catch (JSONException e) {
             Log.d("Places", "parse error");
@@ -34,7 +34,7 @@ public class NearbyDataParser {
     private List<HashMap<String, String>> getPlaces(JSONArray jsonArray) {
         int placesCount = jsonArray.length();
         List<HashMap<String, String>> placesList = new ArrayList<>();
-        HashMap<String, String> placeMap = null;
+        HashMap<String, String> placeMap;
         Log.d("Places", "getPlaces");
 
         for (int i = 0; i < placesCount; i++) {
